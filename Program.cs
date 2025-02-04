@@ -6,11 +6,12 @@
         {
             int fieldSize = DisplayFieldSizeMenu();
 
+            Console.Clear();
             bool[,] field = InitializeField(fieldSize);
             while (true)
             {
-                Console.Clear();
                 DisplayField(field);
+                field = ComputeNextState(field);
                 Thread.Sleep(1000);
             }
         }
@@ -69,7 +70,7 @@
 
         static bool[,] InitializeField(int fieldSize)
         {
-            bool[,] field = new bool[fieldSize,fieldSize];
+            bool[,] field = new bool[fieldSize, fieldSize];
             Random random = new Random();
 
             for (int i = 0; i < fieldSize; i++)
@@ -87,18 +88,19 @@
             int rows = field.GetLength(0);
             int cols = field.GetLength(1);
 
-            DrawHorizontalBorder(cols);
+            Console.SetCursorPosition(0, 0);
+            DrawHorizontalBorder(cols * 2);
 
             for (int i = 0; i < rows; i++)
             {
                 Console.Write("|");
                 for (int j = 0; j < cols; j++)
                 {
-                    Console.Write(field[i, j] ? "■" : " ");
+                    Console.Write(field[i, j] ? "░░" : "▓▓"); //Quick solution to make the field look square, whill be changed when implementing multiple gol displays
                 }
                 Console.WriteLine("|");
             }
-            DrawHorizontalBorder(cols);
+            DrawHorizontalBorder(cols * 2);
         }
 
         private static void DrawHorizontalBorder(int collums)
@@ -109,6 +111,31 @@
                 Console.Write('-');
             }
             Console.WriteLine('+');
+        }
+
+        static bool[,] ComputeNextState(bool[,] currentField)
+        {
+            int rows = currentField.GetLength(0);
+            int cols = currentField.GetLength(1);
+
+            bool[,] result = new bool[rows, cols];
+
+            for (int i = 0; i < rows; i++)
+            {
+                for (int j = 0; j < cols; j++)
+                {
+                    int aliveNeighbors = CountAliveNeighbors(currentField, i, j);
+                    if (currentField[i, j])
+                    {
+                        result[i, j] = (aliveNeighbors == 2 || aliveNeighbors == 3);
+                    }
+                    else
+                    {
+                        result[i, j] = (aliveNeighbors == 3);
+                    }
+                }
+            }
+            return result;
         }
 
         static int CountAliveNeighbors(bool[,] field, int row, int col)
