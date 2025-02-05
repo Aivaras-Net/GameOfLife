@@ -2,6 +2,9 @@
 
 namespace GameOfLife.Infrastructure
 {
+    /// <summary>
+    /// Manages Initiation and execution of the game.
+    /// </summary>
     internal class Game
     {
         private readonly IRenderer _renderer;
@@ -16,19 +19,28 @@ namespace GameOfLife.Infrastructure
             _inputHandler = inputHandler;
         }
 
+        /// <summary>
+        /// Starts the game loop.
+        /// </summary>
         public void Start()
         {
             int fieldSize = _inputHandler.GetFieldSize();
             field = InitializeField(fieldSize);
 
+            // Continuous display and update loop
             while (true)
             {
                 _renderer.Render(field);
                 field = _gameLogic.ComputeNextState(field);
-                Thread.Sleep(1000);
+                Thread.Sleep(Constants.DefaultSleepTime);
             }
         }
 
+        /// <summary>
+        /// Initializes the game with a random layout of dead and alive cells.
+        /// </summary>
+        /// <param name="fieldSize">The size of the square game field.</param>
+        /// <returns>Two dimentional boolean array representing the game field.</returns>
         private static bool[,] InitializeField(int fieldSize)
         {
             bool[,] field = new bool[fieldSize, fieldSize];

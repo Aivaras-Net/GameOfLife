@@ -2,21 +2,29 @@
 
 namespace GameOfLife.Infrastructure
 {
+    /// <summary>
+    /// Manages user input for the Game of life.
+    /// </summary>
     internal class UserInputHandler : IInputHandler
     {
+        /// <summary>
+        /// Prompts the user to select or enter a field size.
+        /// </summary>
+        /// <returns>A positive integer representing the game field size.</returns>
         public int GetFieldSize()
         {
-            int[] presetSizes = { 10, 20, 30 };
-            string[] options = presetSizes.Select(size => $"{size}x{size}").Concat(new[] {"Custom"}).ToArray();
+            int[] presetSizes = Constants.PresetFieldSizes;
+            string[] options = presetSizes.Select(size => $"{size}x{size}").Concat(new[] {Constants.CustomOption}).ToArray();
             int selectedIndex = 0;
 
+            // Loop until user makes a selection.
             while (true)
             {
                 Console.Clear();
-                Console.WriteLine("Select field size:");
+                Console.WriteLine(Constants.SelectFieldSizeMessage);
                 for (int i = 0; i < options.Length; i++)
                 {
-                    Console.WriteLine((i == selectedIndex ? ">> " : "   ") + options[i]);
+                    Console.WriteLine((i == selectedIndex ? Constants.ArrowPointer : Constants.NoArrowPrefix) + options[i]);
                 }
 
                 ConsoleKeyInfo keyInfo = Console.ReadKey(true);
@@ -32,13 +40,17 @@ namespace GameOfLife.Infrastructure
 
         }
 
+        /// <summary>
+        /// Prompts the user to enter a custom game field size.
+        /// </summary>
+        /// <returns>A positive integer representing the game field size.</returns>
         private static int GetCustomSize()
         {
             int customSize;
             while (true)
             {
                 Console.Clear();
-                Console.WriteLine("Enter custom field size (positive integer):");
+                Console.WriteLine(Constants.CustomFieldSizePromt);
                 if (int.TryParse(Console.ReadLine(), out customSize) && customSize > 0)
                 {
                     Console.Clear();
