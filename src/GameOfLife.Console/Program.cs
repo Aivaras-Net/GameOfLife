@@ -1,7 +1,8 @@
-﻿using GameOfLife.Infrastructure;
-using GameOfLife.Interfaces;
+﻿using GameOfLife.CLI.Infrastructure;
+using GameOfLife.Core.Interfaces;
+using GameOfLife.Core.Infrastucture;
 
-namespace GameOfLife
+namespace GameOfLife.CLI
 {
     internal class Program
     {

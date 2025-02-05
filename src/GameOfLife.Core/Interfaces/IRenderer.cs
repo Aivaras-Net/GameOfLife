@@ -1,6 +1,6 @@
-﻿namespace GameOfLife.Interfaces
+﻿namespace GameOfLife.Core.Interfaces
 {
-    internal interface IRenderer
+    public interface IRenderer
     {
         /// <summary>
         /// Renders the current state of the game.

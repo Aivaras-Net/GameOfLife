@@ -5,7 +5,7 @@ VisualStudioVersion = 17.12.35707.178
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameOfLife.Core", "src\GameOfLife.Core\GameOfLife.Core.csproj", "{D186AC09-F0F7-474C-8FD9-C022E007AC8E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameOfLife.Console", "src\GameOfLife.Console\GameOfLife.Console.csproj", "{6646F7D9-0C10-4362-A1DC-FBE0FE01969F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameOfLife.CLI", "src\GameOfLife.Console\GameOfLife.CLI.csproj", "{6646F7D9-0C10-4362-A1DC-FBE0FE01969F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

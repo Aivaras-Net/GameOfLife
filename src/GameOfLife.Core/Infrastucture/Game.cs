@@ -1,11 +1,12 @@
-﻿using GameOfLife.Interfaces;
+﻿using GameOfLife.Core.Interfaces;
 
-namespace GameOfLife.Infrastructure
+
+namespace GameOfLife.Core.Infrastucture
 {
     /// <summary>
     /// Manages Initiation and execution of the game.
     /// </summary>
-    internal class Game
+    public class Game
     {
         private readonly IRenderer _renderer;
         private readonly IGameLogic _gameLogic;

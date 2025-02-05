@@ -1,9 +1,9 @@
-﻿namespace GameOfLife.Infrastructure
+﻿namespace GameOfLife.CLI.Infrastructure
 {
     /// <summary>
-    /// Provides constant values for the application
+    /// Provides constant values used for console implementation
     /// </summary>
-    public static class Constants
+    public static class ConsoleConstants
     {
         public const string AliveCellSymbol = "░░";
         public const string DeadCellSymbol = "▓▓";
@@ -13,9 +13,6 @@
         public const int CellWidthMultiplier = 2;
         public const int ConsoleCursorPositionX = 0;
         public const int ConsoleCursorPositionY = 0;
-
-
-        public const int DefaultSleepTime = 1000;
 
         public static readonly int[] PresetFieldSizes = { 10, 20, 30 };
         public const string SelectFieldSizeMessage = "Select field size:";

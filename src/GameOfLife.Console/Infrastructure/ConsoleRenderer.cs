@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using GameOfLife.Interfaces;
+using GameOfLife.Core.Interfaces;
 
-namespace GameOfLife.Infrastructure
+namespace GameOfLife.CLI.Infrastructure
 {
     /// <summary>
     /// Responsible for the console output.
@@ -17,21 +17,21 @@ namespace GameOfLife.Infrastructure
         {
             int rows = field.GetLength(0);
             int cols = field.GetLength(1);
-            
+
             //Reset the cursor to the top left to avoid flickering from updates.
-            Console.SetCursorPosition(Constants.ConsoleCursorPositionX, Constants.ConsoleCursorPositionY);
-            DrawHorizontalBorder(cols * Constants.CellWidthMultiplier);
+            Console.SetCursorPosition(ConsoleConstants.ConsoleCursorPositionX, ConsoleConstants.ConsoleCursorPositionY);
+            DrawHorizontalBorder(cols * ConsoleConstants.CellWidthMultiplier);
 
             for (int i = 0; i < rows; i++)
             {
-                Console.Write(Constants.BorderVertical);
+                Console.Write(ConsoleConstants.BorderVertical);
                 for (int j = 0; j < cols; j++)
                 {
-                    Console.Write(field[i, j] ? Constants.AliveCellSymbol : Constants.DeadCellSymbol); //Quick solution to make the field look square, whill be changed when implementing multiple gol displays
+                    Console.Write(field[i, j] ? ConsoleConstants.AliveCellSymbol : ConsoleConstants.DeadCellSymbol); //Quick solution to make the field look square, whill be changed when implementing multiple gol displays
                 }
-                Console.WriteLine(Constants.BorderVertical);
+                Console.WriteLine(ConsoleConstants.BorderVertical);
             }
-            DrawHorizontalBorder(cols * Constants.CellWidthMultiplier);
+            DrawHorizontalBorder(cols * ConsoleConstants.CellWidthMultiplier);
         }
 
         /// <summary>
@@ -40,12 +40,12 @@ namespace GameOfLife.Infrastructure
         /// <param name="columns">Number of columns.</param>
         private static void DrawHorizontalBorder(int columns)
         {
-            Console.Write(Constants.BorderCorner);
+            Console.Write(ConsoleConstants.BorderCorner);
             for (int i = 0; i < columns; i++)
             {
-                Console.Write(Constants.BorderHorizontal);
+                Console.Write(ConsoleConstants.BorderHorizontal);
             }
-            Console.WriteLine(Constants.BorderCorner);
+            Console.WriteLine(ConsoleConstants.BorderCorner);
         }
     }
 }

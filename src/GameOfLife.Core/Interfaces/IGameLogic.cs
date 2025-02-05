@@ -1,6 +1,6 @@
-﻿namespace GameOfLife.Interfaces
+﻿namespace GameOfLife.Core.Interfaces
 {
-    internal interface IGameLogic
+    public interface IGameLogic
     {
         /// <summary>
         /// Computes the next state of the game from current configuration.

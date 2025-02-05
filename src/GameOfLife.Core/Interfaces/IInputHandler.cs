@@ -1,6 +1,6 @@
-﻿namespace GameOfLife.Interfaces
+﻿namespace GameOfLife.Core.Interfaces
 {
-    internal interface IInputHandler
+    public interface IInputHandler
     {
         /// <summary>
         /// Retrieves the field size from the user.
