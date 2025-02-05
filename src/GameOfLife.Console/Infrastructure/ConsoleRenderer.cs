@@ -47,5 +47,16 @@ namespace GameOfLife.CLI.Infrastructure
             }
             Console.WriteLine(ConsoleConstants.BorderCorner);
         }
+
+        public void RenderStatistics (int iteration, int livingCells, int fieldHeight)
+        {
+            int y = ConsoleConstants.ConsoleCursorPositionY + fieldHeight + 2;
+            Console.SetCursorPosition(0,y);
+
+            Console.Write(new string(' ', Console.WindowWidth));
+            Console.SetCursorPosition(0, y);
+
+            Console.WriteLine($"Iteration {iteration} | Living Cells: {livingCells}");
+        }
     }
 }

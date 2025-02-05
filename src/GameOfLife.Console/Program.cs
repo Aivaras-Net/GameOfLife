@@ -11,7 +11,8 @@ namespace GameOfLife.CLI
             IRenderer renderer = new ConsoleRenderer();
             IGameLogic gameLogic = new GameLogic();
             IInputHandler inputHandler = new UserInputHandler();
-            Game game = new Game(renderer, gameLogic, inputHandler);
+            IGameFieldAnalyzer gameFieldAnalyzer = new GameFieldAnalyzer();
+            Game game = new Game(renderer, gameLogic, inputHandler, gameFieldAnalyzer);
             game.Start();
         }
     }

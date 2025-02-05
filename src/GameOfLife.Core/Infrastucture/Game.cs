@@ -11,13 +11,15 @@ namespace GameOfLife.Core.Infrastucture
         private readonly IRenderer _renderer;
         private readonly IGameLogic _gameLogic;
         private readonly IInputHandler _inputHandler;
+        private readonly IGameFieldAnalyzer _gameFieldAnalyzer;
         private bool[,] field;
 
-        public Game(IRenderer renderer, IGameLogic gameLogic, IInputHandler inputHandler)
+        public Game(IRenderer renderer, IGameLogic gameLogic, IInputHandler inputHandler, IGameFieldAnalyzer gameFieldAnalyzer)
         {
             _renderer = renderer;
             _gameLogic = gameLogic;
             _inputHandler = inputHandler;
+            _gameFieldAnalyzer = gameFieldAnalyzer;
         }
 
         /// <summary>
@@ -27,12 +29,16 @@ namespace GameOfLife.Core.Infrastucture
         {
             int fieldSize = _inputHandler.GetFieldSize();
             field = InitializeField(fieldSize);
+            int iteration = 0;
 
             // Continuous display and update loop
             while (true)
             {
                 _renderer.Render(field);
+                int livingCells = _gameFieldAnalyzer.CountLivingCells(field);
+                _renderer.RenderStatistics(iteration, livingCells, fieldSize);
                 field = _gameLogic.ComputeNextState(field);
+                iteration++;
                 Thread.Sleep(Constants.DefaultSleepTime);
             }
         }
