@@ -2,8 +2,16 @@
 
 namespace GameOfLife.Infrastructure
 {
+    /// <summary>
+    /// Implements the rules of 'Game of Life' to compute following states.
+    /// </summary>
     internal class GameLogic : IGameLogic
     {
+        /// <summary>
+        /// Computes the next state of the game field by evaluating every cells neighbor count.
+        /// </summary>
+        /// <param name="currentField">Two dimentional boolean array representing the current game field.</param>
+        /// <returns>Two dimentional boolean array representing the next game field.</returns>
         public bool[,] ComputeNextState(bool[,] currentField)
         {
             int rows = currentField.GetLength(0);
@@ -16,6 +24,7 @@ namespace GameOfLife.Infrastructure
                 for (int j = 0; j < cols; j++)
                 {
                     int aliveNeighbors = CountAliveNeighbors(currentField, i, j);
+                    // Apply Conway's rules.
                     if (currentField[i, j])
                     {
                         result[i, j] = aliveNeighbors == 2 || aliveNeighbors == 3;
@@ -29,6 +38,13 @@ namespace GameOfLife.Infrastructure
             return result;
         }
 
+        /// <summary>
+        /// Counts the number of alive neighboring cells for a given cell.
+        /// </summary>
+        /// <param name="field">Two dimentional boolean array representing the game field.</param>
+        /// <param name="row">The row index of the cell.</param>
+        /// <param name="col">The column index of the cell.</param>
+        /// <returns>The count of alive neighbors.</returns>
         static int CountAliveNeighbors(bool[,] field, int row, int col)
         {
             int count = 0;

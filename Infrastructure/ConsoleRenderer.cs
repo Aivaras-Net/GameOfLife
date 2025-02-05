@@ -4,13 +4,21 @@ using GameOfLife.Interfaces;
 
 namespace GameOfLife.Infrastructure
 {
+    /// <summary>
+    /// Responsible for the console output.
+    /// </summary>
     internal class ConsoleRenderer : IRenderer
     {
+        /// <summary>
+        /// Renders the current state of the game.
+        /// </summary>
+        /// <param name="field">Two dimentional boolean array representing alive and dead cells.</param>
         public void Render(bool[,] field)
         {
             int rows = field.GetLength(0);
             int cols = field.GetLength(1);
-
+            
+            //Reset the cursor to the top left to avoid flickering from updates.
             Console.SetCursorPosition(Constants.ConsoleCursorPositionX, Constants.ConsoleCursorPositionY);
             DrawHorizontalBorder(cols * Constants.CellWidthMultiplier);
 
@@ -26,6 +34,10 @@ namespace GameOfLife.Infrastructure
             DrawHorizontalBorder(cols * Constants.CellWidthMultiplier);
         }
 
+        /// <summary>
+        /// Draws a horizontal border line for the game field.
+        /// </summary>
+        /// <param name="columns">Number of columns.</param>
         private static void DrawHorizontalBorder(int columns)
         {
             Console.Write(Constants.BorderCorner);

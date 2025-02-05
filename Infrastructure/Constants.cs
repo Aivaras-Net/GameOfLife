@@ -1,5 +1,8 @@
 ﻿namespace GameOfLife.Infrastructure
 {
+    /// <summary>
+    /// Provides constant values for the application
+    /// </summary>
     public static class Constants
     {
         public const string AliveCellSymbol = "░░";
