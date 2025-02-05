@@ -20,6 +20,11 @@ namespace GameOfLife.CLI.Infrastructure
 
             //Reset the cursor to the top left to avoid flickering from updates.
             Console.SetCursorPosition(ConsoleConstants.ConsoleCursorPositionX, ConsoleConstants.ConsoleCursorPositionY);
+            Console.WriteLine("Press S to Save, Q to Quit");
+
+            int startY= ConsoleConstants.ConsoleCursorPositionY +1;
+
+            Console.SetCursorPosition(ConsoleConstants.ConsoleCursorPositionX, startY);
             DrawHorizontalBorder(cols * ConsoleConstants.CellWidthMultiplier);
 
             for (int i = 0; i < rows; i++)

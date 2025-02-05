@@ -6,20 +6,24 @@ namespace GameOfLife.Core.Infrastucture
     /// <summary>
     /// Manages Initiation and execution of the game.
     /// </summary>
-    public class Game
+    public class GameManager
     {
         private readonly IRenderer _renderer;
         private readonly IGameLogic _gameLogic;
         private readonly IInputHandler _inputHandler;
         private readonly IGameFieldAnalyzer _gameFieldAnalyzer;
+        private readonly IFileManager _gameFileManager;
+        private readonly IGameInputHandler _gameInputHandler;
         private bool[,] field;
 
-        public Game(IRenderer renderer, IGameLogic gameLogic, IInputHandler inputHandler, IGameFieldAnalyzer gameFieldAnalyzer)
+        public GameManager(IRenderer renderer, IGameLogic gameLogic, IInputHandler inputHandler, IGameFieldAnalyzer gameFieldAnalyzer, IFileManager fileManager, IGameInputHandler gameInputHandler)
         {
             _renderer = renderer;
             _gameLogic = gameLogic;
             _inputHandler = inputHandler;
             _gameFieldAnalyzer = gameFieldAnalyzer;
+            _gameFileManager = fileManager;
+            _gameInputHandler = gameInputHandler;
         }
 
         /// <summary>
@@ -34,7 +38,16 @@ namespace GameOfLife.Core.Infrastucture
             // Continuous display and update loop
             while (true)
             {
-                _renderer.Render(field);
+                //if (_gameInputHandler.GetCommand() == GameCommand.Save)
+                //{
+                //    _gameFileManager.SaveGame(field,"Test.csv");
+                //}
+
+                if (_gameInputHandler.GetCommand() == GameCommand.Quit)
+                {
+                    break;
+                }
+                    _renderer.Render(field);
                 int livingCells = _gameFieldAnalyzer.CountLivingCells(field);
                 _renderer.RenderStatistics(iteration, livingCells, fieldSize);
                 field = _gameLogic.ComputeNextState(field);
