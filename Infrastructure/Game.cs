@@ -25,7 +25,7 @@ namespace GameOfLife.Infrastructure
             {
                 _renderer.Render(field);
                 field = _gameLogic.ComputeNextState(field);
-                Thread.Sleep(1000);
+                Thread.Sleep(Constants.DefaultSleepTime);
             }
         }
 
