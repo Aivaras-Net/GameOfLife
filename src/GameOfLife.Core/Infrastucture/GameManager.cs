@@ -15,6 +15,7 @@ namespace GameOfLife.Core.Infrastucture
         private readonly IFileManager _gameFileManager;
         private readonly IGameInputHandler _gameInputHandler;
         private bool[,] field;
+        private int iteration;
 
         public GameManager(IRenderer renderer, IGameLogic gameLogic, IInputHandler inputHandler, IGameFieldAnalyzer gameFieldAnalyzer, IFileManager fileManager, IGameInputHandler gameInputHandler)
         {
@@ -31,22 +32,23 @@ namespace GameOfLife.Core.Infrastucture
         /// </summary>
         public void Start()
         {
+            iteration = 0;
             GameStartMode startMode = _inputHandler.GetGameStartMode();
             if (startMode == GameStartMode.Load)
             {
                 string savedGameFile = _inputHandler.GetSavedFilePath();
-                if (!string.IsNullOrEmpty(savedGameFile))
-                {
                     try
                     {
-                        field = _gameFileManager.LoadGame(savedGameFile);
+                        var (loadedField, loadedIteration) = _gameFileManager.LoadGame(savedGameFile);
+                    field = loadedField;
+                    iteration = loadedIteration;
                     }
                     catch (Exception ex)
                     {
                         Console.WriteLine($"Failed to lad game : {ex.Message} ");
-                        field=InitializeField(10);
+                        return;
                     }
-                }
+                
             }
             else
             {
@@ -54,7 +56,7 @@ namespace GameOfLife.Core.Infrastucture
                 field = InitializeField(fieldSize);
             }
 
-            int iteration = 0;
+
             bool stoped = false;
 
             // Continuous display and update loop
@@ -102,8 +104,8 @@ namespace GameOfLife.Core.Infrastucture
             switch (command)
             {
                 case GameCommand.Save:
-                    _gameFileManager.SaveGame(field, "Saves/SAVEDGAME.bin");
-                    _renderer.RenderMessage("Game saved to GameSave.csv");
+                    _gameFileManager.SaveGame(field, iteration, "Saves");
+                    _renderer.RenderMessage("Game saved successfully.");
                     break;
                 case GameCommand.Quit:
                     _renderer.RenderMessage("Exiting game...");

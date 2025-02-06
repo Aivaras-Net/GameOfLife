@@ -1,109 +1,62 @@
-﻿using GameOfLife.Core.Interfaces;
+﻿using System.Text.Json;
+using GameOfLife.Core.Interfaces;
 
 namespace GameOfLife.Core.Infrastucture
 {
     public class FileManager : IFileManager
     {
-        public void SaveGame(bool[,] field, string filePath)
+        public void SaveGame(bool[,] field, int iteration, string directoryPath)
         {
-            if (field == null)
-            {
-                throw new ArgumentNullException("field");
-            }
-            if (string.IsNullOrEmpty(filePath))
-            {
-                throw new ArgumentException("File path cannot be null or empty.", nameof(filePath));
-            }
+            if (field == null) throw new ArgumentNullException("field");
+            if (string.IsNullOrWhiteSpace(directoryPath))
+                throw new ArgumentException("Directory path cannot be null or empty.", nameof(directoryPath));
+
+            Directory.CreateDirectory(directoryPath);
+            int saveCount = Directory.GetFiles(directoryPath, "SavedGame*.json").Length;
+            string filePath = Path.Combine(directoryPath, $"SavedGame{saveCount + 1}.json");
 
             int rows = field.GetLength(0);
             int cols = field.GetLength(1);
-
-            //using (StreamWriter writter = new StreamWriter(filePath))
-            //{
-            //    writter.WriteLine($"{rows},{cols}");
-            //    for (int i = 0; i < rows; i++)
-            //    {
-            //        for (int j = 0; j < cols; j++)
-            //        {
-            //            writter.Write(field[i, j] ? "1" : "0");
-            //            if (j < cols - 1)
-            //            {
-            //                writter.Write(',');
-            //            }
-            //        }
-            //        writter.WriteLine();
-            //    }
-            //}
-
-            using (var stream = File.Open(filePath, FileMode.Create))
-            using (var writer = new BinaryWriter(stream))
+            bool[][] jaggedField = new bool[rows][];
+            for (int i = 0; i < rows; i++)
             {
-                writer.Write(rows);
-                writer.Write(cols);
-
-                byte currentByte = 0;
-                int bitCount = 0;
-
-                for (int i = 0; i < rows; i++)
+                jaggedField[i] = new bool[cols];
+                for (int j = 0; j < cols; j++)
                 {
-                    for (int j = 0; j < cols; j++)
-                    {
-                        currentByte = (byte)(currentByte << 1);
-                        if (field[i, j])
-                        {
-                            currentByte |= 1;
-                        }
-                        bitCount++;
-
-                        if (bitCount == 8)
-                        {
-                            writer.Write(currentByte);
-                            currentByte = 0;
-                            bitCount = 0;
-                        }
-                    }
-                }
-
-                if (bitCount > 0)
-                {
-                    currentByte = (byte)(currentByte << (8 - bitCount));
-                    writer.Write(currentByte);
+                    jaggedField[i][j] = field[i,j];
                 }
             }
-            }
-        public bool[,] LoadGame(string filePath)
+
+            GameState gameState = new GameState { Field=jaggedField, Iteration= iteration};
+            string json = JsonSerializer.Serialize(gameState, new JsonSerializerOptions { WriteIndented = true });
+            File.WriteAllText(filePath, json);
+
+        }
+        public (bool[,] field, int iteration) LoadGame(string filePath)
         {
-            if (string.IsNullOrEmpty(filePath))
+            if (string.IsNullOrWhiteSpace(filePath))
             {
                 throw new ArgumentNullException("File path cannot be null or empty.", nameof(filePath));
             }
 
-            using (var stream = File.Open(filePath, FileMode.Open))
-            using (var reader = new BinaryReader(stream))
+            string json = File.ReadAllText(filePath);
+            GameState gameState = JsonSerializer.Deserialize<GameState>(json);
+            if(gameState?.Field == null || gameState.Field.Length == 0)
             {
-                int rows = reader.ReadInt32();
-                int cols = reader.ReadInt32();
-                bool[,] field = new bool[rows, cols];
-
-                int totalCells = rows * cols;
-                int cellIndex = 0;
-
-                while (cellIndex < totalCells)
-                {
-                    byte currentByte = reader.ReadByte();
-                    int bitsInByte = Math.Min(8,totalCells - cellIndex);
-                    for (int bit = bitsInByte - 1; bit >= 0; bit--)
-                    {
-                        bool cellValue = ((currentByte >> bit) & 1) ==1;
-                        int row = cellIndex/ cols;
-                        int col = cellIndex% rows;
-                        field[row, col] = cellValue;
-                        cellIndex++;
-                    }
-                }
-                return field;
+                throw new Exception("Invalid game state data");    
             }
 
+            int rows = gameState.Field.Length;
+            int cols = gameState.Field[0].Length;
+            bool[,] field = new bool[rows, cols];
+            for (int i = 0; i < rows; i++)
+            {
+                for (int j = 0;j < cols; j++)
+                {
+                    field[i,j] = gameState.Field[i][j];
+                }
+            }
+            return (field,gameState.Iteration);
         }
     }
 }

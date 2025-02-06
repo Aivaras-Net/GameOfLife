@@ -2,8 +2,8 @@
 {
     public interface IFileManager
     {
-        void SaveGame(bool[,] field, string filePath);
+        void SaveGame(bool[,] field, int iteration, string directoryPath);
 
-        bool[,] LoadGame(string filePath);
+        (bool[,] field, int iteration) LoadGame(string filePath);
     }
 }

@@ -88,7 +88,7 @@ namespace GameOfLife.CLI.Infrastructure
                 return null;
             }
 
-            string[] files = Directory.GetFiles(saveFolder, "*.bin");
+            string[] files = Directory.GetFiles(saveFolder, "*.json");
             if (files.Length == 0)
             {
                 Console.WriteLine("No saved games exits");
