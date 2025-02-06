@@ -16,13 +16,15 @@ namespace GameOfLife.Core.Infrastucture
         /// <param name="directoryPath">Directory path to save the game state.</param>
         public void SaveGame(bool[,] field, int iteration, string directoryPath)
         {
-            if (field == null) throw new ArgumentNullException("field");
+            if (field == null)
+                throw new ArgumentNullException(Constants.FieldArgumentName);
             if (string.IsNullOrWhiteSpace(directoryPath))
-                throw new ArgumentException("Directory path cannot be null or empty.", nameof(directoryPath));
+                throw new ArgumentException(Constants.NullOrEmptyDirectoryPathMessage, Constants.DirectoryPathArgumentName);
 
             Directory.CreateDirectory(directoryPath);
-            int saveCount = Directory.GetFiles(directoryPath, "SavedGame*.json").Length;
-            string filePath = Path.Combine(directoryPath, $"SavedGame{saveCount + 1}.json");
+            int saveCount = Directory.GetFiles(directoryPath, Constants.SaveFileSearchPattern).Length;
+            string filePath = Path.Combine(directoryPath,
+                $"{Constants.SaveFilePrefix}{saveCount + 1}{Constants.SaveFileExtension}");
 
             int rows = field.GetLength(0);
             int cols = field.GetLength(1);
@@ -32,12 +34,12 @@ namespace GameOfLife.Core.Infrastucture
                 jaggedField[i] = new bool[cols];
                 for (int j = 0; j < cols; j++)
                 {
-                    jaggedField[i][j] = field[i,j];
+                    jaggedField[i][j] = field[i, j];
                 }
             }
 
-            GameState gameState = new GameState { Field=jaggedField, Iteration= iteration};
-            string json = JsonSerializer.Serialize(gameState, new JsonSerializerOptions { WriteIndented = true });
+            GameState gameState = new GameState { Field = jaggedField, Iteration = iteration };
+            string json = JsonSerializer.Serialize(gameState, new JsonSerializerOptions { WriteIndented = Constants.JsonWriteIndented });
             File.WriteAllText(filePath, json);
 
         }
@@ -50,15 +52,13 @@ namespace GameOfLife.Core.Infrastucture
         public (bool[,] field, int iteration) LoadGame(string filePath)
         {
             if (string.IsNullOrWhiteSpace(filePath))
-            {
-                throw new ArgumentNullException("File path cannot be null or empty.", nameof(filePath));
-            }
+                throw new ArgumentNullException(Constants.FilePathArgumentName, Constants.NullOrEmptyFilePathMessage);
 
             string json = File.ReadAllText(filePath);
             GameState gameState = JsonSerializer.Deserialize<GameState>(json);
-            if(gameState?.Field == null || gameState.Field.Length == 0)
+            if (gameState?.Field == null || gameState.Field.Length == 0)
             {
-                throw new Exception("Invalid game state data");    
+                throw new Exception(Constants.InvalidGameStateDataMessage);
             }
 
             int rows = gameState.Field.Length;
@@ -66,12 +66,12 @@ namespace GameOfLife.Core.Infrastucture
             bool[,] field = new bool[rows, cols];
             for (int i = 0; i < rows; i++)
             {
-                for (int j = 0;j < cols; j++)
+                for (int j = 0; j < cols; j++)
                 {
-                    field[i,j] = gameState.Field[i][j];
+                    field[i, j] = gameState.Field[i][j];
                 }
             }
-            return (field,gameState.Iteration);
+            return (field, gameState.Iteration);
         }
     }
 }

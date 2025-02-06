@@ -54,7 +54,7 @@ namespace GameOfLife.CLI.Infrastructure
         public void RenderStatistics(int iteration, int livingCells, int offsetX, int offsetY)
         {
             Console.SetCursorPosition(offsetX, offsetY);
-            Console.WriteLine($"Iteration {iteration} | Living Cells: {livingCells}");
+            Console.WriteLine(string.Format(ConsoleConstants.GameStatisticsFormat, iteration, livingCells));
         }
 
         /// <summary>

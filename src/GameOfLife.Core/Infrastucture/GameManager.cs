@@ -53,7 +53,7 @@ namespace GameOfLife.Core.Infrastucture
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine($"Failed to lad game : {ex.Message} ");
+                        Console.WriteLine(string.Format(Constants.LoadGameFailedMessageFormat, ex.Message));
                         return;
                     }
                 
@@ -116,11 +116,11 @@ namespace GameOfLife.Core.Infrastucture
             switch (command)
             {
                 case GameCommand.Save:
-                    _gameFileManager.SaveGame(field, iteration, "Saves");
-                    _renderer.RenderMessage("Game saved successfully.");
+                    _gameFileManager.SaveGame(field, iteration, Constants.DefaultSaveFolder);
+                    _renderer.RenderMessage(Constants.GameSavedMessage);
                     break;
                 case GameCommand.Quit:
-                    _renderer.RenderMessage("Exiting game...");
+                    _renderer.RenderMessage(Constants.ExitingGameMessage);
                     return true;
                 default:
                     break;
