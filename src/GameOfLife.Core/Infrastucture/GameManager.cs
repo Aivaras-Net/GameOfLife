@@ -70,9 +70,9 @@ namespace GameOfLife.Core.Infrastucture
                     break;
                 }
 
-                _renderer.Render(field);
                 int livingCells = _gameFieldAnalyzer.CountLivingCells(field);
-                _renderer.RenderStatistics(iteration, livingCells, 10);
+                _renderer.Render(field,iteration,livingCells,0,0);
+                _renderer.Render(field, iteration, livingCells, 55, 0);
                 field = _gameLogic.ComputeNextState(field);
                 iteration++;
                 Thread.Sleep(Constants.DefaultSleepTime);

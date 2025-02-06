@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using GameOfLife.Core.Interfaces;
 
 namespace GameOfLife.CLI.Infrastructure
@@ -9,66 +8,74 @@ namespace GameOfLife.CLI.Infrastructure
     /// </summary>
     internal class ConsoleRenderer : IRenderer
     {
-        /// <summary>
-        /// Renders the current state of the game.
-        /// </summary>
-        /// <param name="field">Two dimentional boolean array representing alive and dead cells.</param>
-        public void Render(bool[,] field)
-        {
-            int rows = field.GetLength(0);
-            int cols = field.GetLength(1);
 
-            //Reset the cursor to the top left to avoid flickering from updates.
-            Console.SetCursorPosition(ConsoleConstants.ConsoleCursorPositionX, ConsoleConstants.ConsoleCursorPositionY);
+        public void Render(bool[,] field, int iteration, int livingCells, int offsetX = ConsoleConstants.ConsoleCursorPositionX, int offsetY = ConsoleConstants.ConsoleCursorPositionY)
+        {
+            Console.SetCursorPosition(offsetX, offsetY);
             Console.WriteLine("Press S to Save, Q to Quit");
 
-            int startY= ConsoleConstants.ConsoleCursorPositionY +1;
+            RenderStatistics(iteration, livingCells, offsetX, offsetY + 1);
 
-            Console.SetCursorPosition(ConsoleConstants.ConsoleCursorPositionX, startY);
-            DrawHorizontalBorder(cols * ConsoleConstants.CellWidthMultiplier);
+            int rows = field.GetLength(0);
+            int cols = field.GetLength(1);
+            int fieldStartX = offsetX;
+            int fieldStartY = offsetY + 2;
+
+            DrawHorizontalBorder(cols * ConsoleConstants.CellWidthMultiplier, fieldStartX, fieldStartY);
 
             for (int i = 0; i < rows; i++)
             {
+                Console.SetCursorPosition(fieldStartX, fieldStartY + 1 + i);
                 Console.Write(ConsoleConstants.BorderVertical);
                 for (int j = 0; j < cols; j++)
                 {
-                    Console.Write(field[i, j] ? ConsoleConstants.AliveCellSymbol : ConsoleConstants.DeadCellSymbol); //Quick solution to make the field look square, whill be changed when implementing multiple gol displays
+                    Console.Write(field[i, j] ? ConsoleConstants.AliveCellSymbol : ConsoleConstants.DeadCellSymbol);
                 }
-                Console.WriteLine(ConsoleConstants.BorderVertical);
+                Console.Write(ConsoleConstants.BorderVertical);
             }
-            DrawHorizontalBorder(cols * ConsoleConstants.CellWidthMultiplier);
+
+            Console.SetCursorPosition(fieldStartX, fieldStartY + rows + 1);
+            DrawHorizontalBorder(cols * ConsoleConstants.CellWidthMultiplier, fieldStartX, fieldStartY + rows + 1);
+        }
+
+        /// <summary>
+        /// Renders the game statistics above the field.
+        /// </summary>
+        /// <param name="iteration">Current iteration number.</param>
+        /// <param name="livingCells">Number of living cells.</param>
+        /// <param name="offsetX">Left offset.</param>
+        /// <param name="offsetY">Top offset (statistics will be rendered at this Y coordinate).</param>
+        public void RenderStatistics(int iteration, int livingCells, int offsetX, int offsetY)
+        {
+            Console.SetCursorPosition(offsetX, offsetY);
+            Console.WriteLine($"Iteration {iteration} | Living Cells: {livingCells}");
         }
 
         /// <summary>
         /// Draws a horizontal border line for the game field.
         /// </summary>
-        /// <param name="columns">Number of columns.</param>
-        private static void DrawHorizontalBorder(int columns)
+        /// <param name="width">Width of the border in characters.</param>
+        /// <param name="offsetX">Left offset.</param>
+        /// <param name="offsetY">Y coordinate for the border.</param>
+        private static void DrawHorizontalBorder(int width, int offsetX, int offsetY)
         {
+            Console.SetCursorPosition(offsetX, offsetY);
             Console.Write(ConsoleConstants.BorderCorner);
-            for (int i = 0; i < columns; i++)
+            for (int i = 0; i < width; i++)
             {
                 Console.Write(ConsoleConstants.BorderHorizontal);
             }
             Console.WriteLine(ConsoleConstants.BorderCorner);
         }
 
-        public void RenderStatistics (int iteration, int livingCells, int fieldHeight)
-        {
-            int y = ConsoleConstants.ConsoleCursorPositionY + fieldHeight + 2;
-            Console.SetCursorPosition(0,y);
-
-            Console.Write(new string(' ', Console.WindowWidth));
-            Console.SetCursorPosition(0, y);
-
-            Console.WriteLine($"Iteration {iteration} | Living Cells: {livingCells}");
-        }
-
+        /// <summary>
+        /// Renders a temporary message at the bottom of the console.
+        /// </summary>
+        /// <param name="message">The message to display.</param>
         public void RenderMessage(string message)
         {
             int messageY = Console.WindowHeight - 1;
             Console.SetCursorPosition(0, messageY);
-
             Console.Write(new string(' ', Console.WindowWidth));
             Console.SetCursorPosition(0, messageY);
             Console.WriteLine(message);
