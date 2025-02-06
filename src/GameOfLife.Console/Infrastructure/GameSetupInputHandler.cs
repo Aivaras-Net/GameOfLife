@@ -4,9 +4,9 @@ using GameOfLife.Core.Interfaces;
 namespace GameOfLife.CLI.Infrastructure
 {
     /// <summary>
-    /// Manages user input for the Game of life.
+    /// Manages user input for starting the Game of life.
     /// </summary>
-    internal class FieldInputHandler : IInputHandler
+    internal class GameSetupInputHandler : IGameSetupInputHandler 
     {
         /// <summary>
         /// Prompts the user to select or enter a field size.
@@ -81,47 +81,6 @@ namespace GameOfLife.CLI.Infrastructure
             {
                 return GameStartMode.New;
             }
-        }
-
-        /// <summary>
-        /// Prompts the user to selecta a saved game file to load.
-        /// </summary>
-        /// <returns>The file path of the selected saved game, or null if no saved games exist.</returns>
-        public string GetSavedFilePath()
-        {
-            string saveFolder = "Saves";
-            if (!Directory.Exists(saveFolder))
-            {
-                Console.WriteLine(ConsoleConstants.NoSaveGamesExistMessage);
-                return null;
-            }
-
-            string[] files = Directory.GetFiles(saveFolder, "*.json");
-            if (files.Length == 0)
-            {
-                Console.WriteLine(ConsoleConstants.NoSaveGamesExistMessage);
-                return null;
-            }
-
-            Console.Clear();
-            Console.WriteLine(ConsoleConstants.SelectSavedGameMessage);
-            for (int i = 0; i < files.Length; i++)
-            {
-                Console.WriteLine($"{i + 1}: {Path.GetFileName(files[i])}");
-            }
-
-            int selection = 0;
-            while (true)
-            {
-                Console.WriteLine(ConsoleConstants.EnterSaveFileNumberMessage);
-                string input = Console.ReadLine();
-                if(int.TryParse (input, out selection) && selection >=1 && selection <=files.Length)
-                {
-                    break;
-                }
-                Console.WriteLine(ConsoleConstants.InvalidSaveSelectionMessage);
-            }
-            return files[selection - 1];
         }
     }
 }

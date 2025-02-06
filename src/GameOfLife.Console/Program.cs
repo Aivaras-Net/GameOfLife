@@ -10,11 +10,12 @@ namespace GameOfLife.CLI
         {
             IRenderer renderer = new ConsoleRenderer();
             IGameLogic gameLogic = new GameLogic();
-            IInputHandler inputHandler = new FieldInputHandler();
+            IGameSetupInputHandler gameSetupInputHandler = new GameSetupInputHandler();
             IGameFieldAnalyzer gameFieldAnalyzer = new GameFieldAnalyzer();
             IGameInputHandler gameInputHandler = new GameInputHandler();
-            IFileManager gameFileManager = new FileManager();
-            GameManager game = new GameManager(renderer, gameLogic, inputHandler, gameFieldAnalyzer, gameFileManager, gameInputHandler);
+            IFileManager fileManager = new FileManager();
+            ISaveFileSelector saveFileSelector = new SaveFileSelector();
+            GameManager game = new GameManager(renderer, gameLogic, gameSetupInputHandler, gameFieldAnalyzer, fileManager, gameInputHandler, saveFileSelector);
             game.Start();
         }
     }

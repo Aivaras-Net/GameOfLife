@@ -21,7 +21,7 @@
         public const string ArrowPointer = ">> ";
         public const string NoArrowPrefix = "    ";
 
-        public const string CommandGuide = "Press S to Save, Q to Stop";
+        public const string CommandGuide = "Press S to Save  |  Q to Stop";
         public const string GameStartModePromptMessage = "Select an option:";
         public const string LoadGameOptionMessage = "L: Load game";
         public const string NewGameOptionMessage = "N: New game";
@@ -32,5 +32,8 @@
         public const string GameSavedSuccessMessage = "Game saved successfully.";
         public const string ExitingGameMessage = "Exiting game...";
         public const string FailedToLoadGameMessage = "Failed to load game: {0}";
+
+        public const string DefaultSaveFolder = "Saves";
+        public const string SaveFileExtension = "*.json";
     }
 }

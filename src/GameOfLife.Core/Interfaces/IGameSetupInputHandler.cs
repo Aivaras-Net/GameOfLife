@@ -2,7 +2,7 @@
 
 namespace GameOfLife.Core.Interfaces
 {
-    public interface IInputHandler
+    public interface IGameSetupInputHandler
     {
         /// <summary>
         /// Retrieves the field size from the user.
@@ -13,14 +13,7 @@ namespace GameOfLife.Core.Interfaces
         /// <summary>
         /// Retrieves the game start mode from the user.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Selected game start mode</returns>
         GameStartMode GetGameStartMode();
-
-
-        /// <summary>
-        /// Retrieves the saved game file path from the user.
-        /// </summary>
-        /// <returns></returns>
-        string GetSavedFilePath();
     }
 }

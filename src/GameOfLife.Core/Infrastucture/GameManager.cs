@@ -10,21 +10,29 @@ namespace GameOfLife.Core.Infrastucture
     {
         private readonly IRenderer _renderer;
         private readonly IGameLogic _gameLogic;
-        private readonly IInputHandler _inputHandler;
+        private readonly IGameSetupInputHandler _gameSetupInputHandler;
         private readonly IGameFieldAnalyzer _gameFieldAnalyzer;
         private readonly IFileManager _gameFileManager;
         private readonly IGameInputHandler _gameInputHandler;
+        private readonly ISaveFileSelector _saveFileSelector;
         private bool[,] field;
         private int iteration;
 
-        public GameManager(IRenderer renderer, IGameLogic gameLogic, IInputHandler inputHandler, IGameFieldAnalyzer gameFieldAnalyzer, IFileManager fileManager, IGameInputHandler gameInputHandler)
+        public GameManager(IRenderer renderer,
+                           IGameLogic gameLogic,
+                           IGameSetupInputHandler inputHandler,
+                           IGameFieldAnalyzer gameFieldAnalyzer,
+                           IFileManager fileManager,
+                           IGameInputHandler gameInputHandler,
+                           ISaveFileSelector saveFileSelector)
         {
             _renderer = renderer;
             _gameLogic = gameLogic;
-            _inputHandler = inputHandler;
+            _gameSetupInputHandler = inputHandler;
             _gameFieldAnalyzer = gameFieldAnalyzer;
             _gameFileManager = fileManager;
             _gameInputHandler = gameInputHandler;
+            _saveFileSelector = saveFileSelector;
         }
 
         /// <summary>
@@ -33,10 +41,10 @@ namespace GameOfLife.Core.Infrastucture
         public void Start()
         {
             iteration = 0;
-            GameStartMode startMode = _inputHandler.GetGameStartMode();
+            GameStartMode startMode = _gameSetupInputHandler.GetGameStartMode();
             if (startMode == GameStartMode.Load)
             {
-                string savedGameFile = _inputHandler.GetSavedFilePath();
+                string savedGameFile = _saveFileSelector.SelectSavedFilePath();
                     try
                     {
                         var (loadedField, loadedIteration) = _gameFileManager.LoadGame(savedGameFile);
@@ -52,7 +60,7 @@ namespace GameOfLife.Core.Infrastucture
             }
             else
             {
-                int fieldSize = _inputHandler.GetFieldSize();
+                int fieldSize = _gameSetupInputHandler.GetFieldSize();
                 field = InitializeField(fieldSize);
             }
 
@@ -71,8 +79,7 @@ namespace GameOfLife.Core.Infrastucture
                 }
 
                 int livingCells = _gameFieldAnalyzer.CountLivingCells(field);
-                _renderer.Render(field,iteration,livingCells,0,0);
-                _renderer.Render(field, iteration, livingCells, 55, 0);
+                _renderer.Render(field,iteration,livingCells,0,0); //Offsets are not supposed to be hardcoded, they are made in preparation for future features
                 field = _gameLogic.ComputeNextState(field);
                 iteration++;
                 Thread.Sleep(Constants.DefaultSleepTime);
