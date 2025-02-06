@@ -1,11 +1,12 @@
-﻿using GameOfLife.Core.Interfaces;
+﻿using GameOfLife.Core.Infrastucture;
+using GameOfLife.Core.Interfaces;
 
 namespace GameOfLife.CLI.Infrastructure
 {
     /// <summary>
     /// Manages user input for the Game of life.
     /// </summary>
-    internal class UserInputHandler : IInputHandler
+    internal class FieldInputHandler : IInputHandler
     {
         /// <summary>
         /// Prompts the user to select or enter a field size.
@@ -58,6 +59,61 @@ namespace GameOfLife.CLI.Infrastructure
                 }
 
             }
+        }
+
+        public GameStartMode GetGameStartMode()
+        {
+            Console.Clear();
+            Console.WriteLine("Select an option");
+            Console.WriteLine("L: Load game");
+            Console.WriteLine("N: New game");
+            ConsoleKeyInfo keyInfo = Console.ReadKey(true);
+
+            if (keyInfo.Key == ConsoleKey.L)
+            {
+                return GameStartMode.Load;
+            }
+            else
+            {
+                return GameStartMode.New;
+            }
+        }
+
+        public string GetSavedFilePath()
+        {
+            string saveFolder = "Saves";
+            if (!Directory.Exists(saveFolder))
+            {
+                Console.WriteLine("No save games exist");
+                return null;
+            }
+
+            string[] files = Directory.GetFiles(saveFolder, "*.bin");
+            if (files.Length == 0)
+            {
+                Console.WriteLine("No saved games exits");
+                return null;
+            }
+
+            Console.Clear();
+            Console.WriteLine("Select a saved game to load:");
+            for (int i = 0; i < files.Length; i++)
+            {
+                Console.WriteLine($"{i + 1}: {Path.GetFileName(files[i])}");
+            }
+
+            int selection = 0;
+            while (true)
+            {
+                Console.WriteLine("Enter the number of the save file:");
+                string input = Console.ReadLine();
+                if(int.TryParse (input, out selection) && selection >=1 && selection <=files.Length)
+                {
+                    break;
+                }
+                Console.WriteLine("Invalid selection. Try again");
+            }
+            return files[selection - 1];
         }
     }
 }

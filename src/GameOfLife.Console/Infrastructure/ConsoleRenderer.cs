@@ -63,5 +63,15 @@ namespace GameOfLife.CLI.Infrastructure
 
             Console.WriteLine($"Iteration {iteration} | Living Cells: {livingCells}");
         }
+
+        public void RenderMessage(string message)
+        {
+            int messageY = Console.WindowHeight - 1;
+            Console.SetCursorPosition(0, messageY);
+
+            Console.Write(new string(' ', Console.WindowWidth));
+            Console.SetCursorPosition(0, messageY);
+            Console.WriteLine(message);
+        }
     }
 }

@@ -3,5 +3,7 @@
     public interface IFileManager
     {
         void SaveGame(bool[,] field, string filePath);
+
+        bool[,] LoadGame(string filePath);
     }
 }

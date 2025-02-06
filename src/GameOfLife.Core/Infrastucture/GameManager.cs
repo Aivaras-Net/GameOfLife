@@ -31,25 +31,46 @@ namespace GameOfLife.Core.Infrastucture
         /// </summary>
         public void Start()
         {
-            int fieldSize = _inputHandler.GetFieldSize();
-            field = InitializeField(fieldSize);
+            GameStartMode startMode = _inputHandler.GetGameStartMode();
+            if (startMode == GameStartMode.Load)
+            {
+                string savedGameFile = _inputHandler.GetSavedFilePath();
+                if (!string.IsNullOrEmpty(savedGameFile))
+                {
+                    try
+                    {
+                        field = _gameFileManager.LoadGame(savedGameFile);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Failed to lad game : {ex.Message} ");
+                        field=InitializeField(10);
+                    }
+                }
+            }
+            else
+            {
+                int fieldSize = _inputHandler.GetFieldSize();
+                field = InitializeField(fieldSize);
+            }
+
             int iteration = 0;
+            bool stoped = false;
 
             // Continuous display and update loop
-            while (true)
+            while (!stoped)
             {
-                //if (_gameInputHandler.GetCommand() == GameCommand.Save)
-                //{
-                //    _gameFileManager.SaveGame(field,"Test.csv");
-                //}
+                GameCommand command = _gameInputHandler.GetCommand();
+                stoped = ProcessCommand(command);
 
-                if (_gameInputHandler.GetCommand() == GameCommand.Quit)
+                if (stoped)
                 {
                     break;
                 }
-                    _renderer.Render(field);
+
+                _renderer.Render(field);
                 int livingCells = _gameFieldAnalyzer.CountLivingCells(field);
-                _renderer.RenderStatistics(iteration, livingCells, fieldSize);
+                _renderer.RenderStatistics(iteration, livingCells, 10);
                 field = _gameLogic.ComputeNextState(field);
                 iteration++;
                 Thread.Sleep(Constants.DefaultSleepTime);
@@ -74,6 +95,23 @@ namespace GameOfLife.Core.Infrastucture
                 }
             }
             return field;
+        }
+
+        private bool ProcessCommand(GameCommand command)
+        {
+            switch (command)
+            {
+                case GameCommand.Save:
+                    _gameFileManager.SaveGame(field, "Saves/SAVEDGAME.bin");
+                    _renderer.RenderMessage("Game saved to GameSave.csv");
+                    break;
+                case GameCommand.Quit:
+                    _renderer.RenderMessage("Exiting game...");
+                    return true;
+                default:
+                    break;
+            }
+            return false;
         }
     }
 }

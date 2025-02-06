@@ -17,7 +17,7 @@ namespace GameOfLife.CLI.Infrastructure
                 return GameCommand.None;
             }
 
-            ConsoleKeyInfo keyInfo = Console.ReadKey();
+            ConsoleKeyInfo keyInfo = Console.ReadKey(true);
             switch (keyInfo.Key)
             {
                 case ConsoleKey.S:

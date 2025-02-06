@@ -10,7 +10,7 @@ namespace GameOfLife.CLI
         {
             IRenderer renderer = new ConsoleRenderer();
             IGameLogic gameLogic = new GameLogic();
-            IInputHandler inputHandler = new UserInputHandler();
+            IInputHandler inputHandler = new FieldInputHandler();
             IGameFieldAnalyzer gameFieldAnalyzer = new GameFieldAnalyzer();
             IGameInputHandler gameInputHandler = new GameInputHandler();
             IFileManager gameFileManager = new FileManager();

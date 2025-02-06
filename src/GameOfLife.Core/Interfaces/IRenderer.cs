@@ -9,5 +9,7 @@
         void Render(bool[,] field);
 
         void RenderStatistics(int iteration, int livingCells, int fieldHeight);
+
+        void RenderMessage(string message);
     }
 }
