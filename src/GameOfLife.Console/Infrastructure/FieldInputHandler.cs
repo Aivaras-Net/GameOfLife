@@ -61,12 +61,16 @@ namespace GameOfLife.CLI.Infrastructure
             }
         }
 
+        /// <summary>
+        /// Prompts the user to select the game start mode (Load or New game).
+        /// </summary>
+        /// <returns>The selected mode.</returns>
         public GameStartMode GetGameStartMode()
         {
             Console.Clear();
-            Console.WriteLine("Select an option");
-            Console.WriteLine("L: Load game");
-            Console.WriteLine("N: New game");
+            Console.WriteLine(ConsoleConstants.GameStartModePromptMessage);
+            Console.WriteLine(ConsoleConstants.LoadGameOptionMessage);
+            Console.WriteLine(ConsoleConstants.NewGameOptionMessage);
             ConsoleKeyInfo keyInfo = Console.ReadKey(true);
 
             if (keyInfo.Key == ConsoleKey.L)
@@ -79,24 +83,28 @@ namespace GameOfLife.CLI.Infrastructure
             }
         }
 
+        /// <summary>
+        /// Prompts the user to selecta a saved game file to load.
+        /// </summary>
+        /// <returns>The file path of the selected saved game, or null if no saved games exist.</returns>
         public string GetSavedFilePath()
         {
             string saveFolder = "Saves";
             if (!Directory.Exists(saveFolder))
             {
-                Console.WriteLine("No save games exist");
+                Console.WriteLine(ConsoleConstants.NoSaveGamesExistMessage);
                 return null;
             }
 
             string[] files = Directory.GetFiles(saveFolder, "*.json");
             if (files.Length == 0)
             {
-                Console.WriteLine("No saved games exits");
+                Console.WriteLine(ConsoleConstants.NoSaveGamesExistMessage);
                 return null;
             }
 
             Console.Clear();
-            Console.WriteLine("Select a saved game to load:");
+            Console.WriteLine(ConsoleConstants.SelectSavedGameMessage);
             for (int i = 0; i < files.Length; i++)
             {
                 Console.WriteLine($"{i + 1}: {Path.GetFileName(files[i])}");
@@ -105,13 +113,13 @@ namespace GameOfLife.CLI.Infrastructure
             int selection = 0;
             while (true)
             {
-                Console.WriteLine("Enter the number of the save file:");
+                Console.WriteLine(ConsoleConstants.EnterSaveFileNumberMessage);
                 string input = Console.ReadLine();
                 if(int.TryParse (input, out selection) && selection >=1 && selection <=files.Length)
                 {
                     break;
                 }
-                Console.WriteLine("Invalid selection. Try again");
+                Console.WriteLine(ConsoleConstants.InvalidSaveSelectionMessage);
             }
             return files[selection - 1];
         }

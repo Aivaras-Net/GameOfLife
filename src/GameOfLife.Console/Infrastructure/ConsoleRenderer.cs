@@ -8,11 +8,18 @@ namespace GameOfLife.CLI.Infrastructure
     /// </summary>
     internal class ConsoleRenderer : IRenderer
     {
-
+        /// <summary>
+        /// Renders the game field, iteration count, and living cells statistics.
+        /// </summary>
+        /// <param name="field">2D boolean array representing the game field.<</param>
+        /// <param name="iteration">Current iteration number.</param>
+        /// <param name="livingCells">Number of living cells.</param>
+        /// <param name="offsetX">X coordinate offset for rendering.</param>
+        /// <param name="offsetY">Y coordinate offset for rendering.</param>
         public void Render(bool[,] field, int iteration, int livingCells, int offsetX = ConsoleConstants.ConsoleCursorPositionX, int offsetY = ConsoleConstants.ConsoleCursorPositionY)
         {
             Console.SetCursorPosition(offsetX, offsetY);
-            Console.WriteLine("Press S to Save, Q to Quit");
+            Console.WriteLine(ConsoleConstants.CommandGuide);
 
             RenderStatistics(iteration, livingCells, offsetX, offsetY + 1);
 

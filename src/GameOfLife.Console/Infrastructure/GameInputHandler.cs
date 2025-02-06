@@ -8,8 +8,15 @@ using GameOfLife.Core.Interfaces;
 
 namespace GameOfLife.CLI.Infrastructure
 {
+    /// <summary>
+    /// Handles in-game input commands.
+    /// </summary>
     internal class GameInputHandler : IGameInputHandler
     {
+        /// <summary>
+        /// Retrieves a command from the user input.
+        /// </summary>
+        /// <returns></returns>
         public GameCommand GetCommand()
         {
             if (!Console.KeyAvailable)

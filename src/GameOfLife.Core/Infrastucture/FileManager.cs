@@ -3,8 +3,17 @@ using GameOfLife.Core.Interfaces;
 
 namespace GameOfLife.Core.Infrastucture
 {
+    /// <summary>
+    /// Manages saving and loading game state to and from files.
+    /// </summary>
     public class FileManager : IFileManager
     {
+        /// <summary>
+        /// Saves the current game state to a file in the specified directory.
+        /// </summary>
+        /// <param name="field">2D boolean array representing the game field.</param>
+        /// <param name="iteration">Current iteration count.</param>
+        /// <param name="directoryPath">Directory path to save the game state.</param>
         public void SaveGame(bool[,] field, int iteration, string directoryPath)
         {
             if (field == null) throw new ArgumentNullException("field");
@@ -32,6 +41,12 @@ namespace GameOfLife.Core.Infrastucture
             File.WriteAllText(filePath, json);
 
         }
+
+        /// <summary>
+        /// Loads a saved game state from the specified file.
+        /// </summary>
+        /// <param name="filePath">Path to the saved game file.</param>
+        /// <returns>A tuple containing the game field and iteration count.</returns>
         public (bool[,] field, int iteration) LoadGame(string filePath)
         {
             if (string.IsNullOrWhiteSpace(filePath))

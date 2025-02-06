@@ -99,6 +99,11 @@ namespace GameOfLife.Core.Infrastucture
             return field;
         }
 
+        /// <summary>
+        /// Processes in-game commands.
+        /// </summary>
+        /// <param name="command">The command to process.</param>
+        /// <returns>True if the game should stop; otherwise, false.</returns>
         private bool ProcessCommand(GameCommand command)
         {
             switch (command)

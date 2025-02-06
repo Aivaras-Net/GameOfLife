@@ -2,8 +2,16 @@
 
 namespace GameOfLife.Core.Infrastucture
 {
+    /// <summary>
+    /// Provies functionality to analyze the game field.
+    /// </summary>
     public class GameFieldAnalyzer : IGameFieldAnalyzer
     {
+        /// <summary>
+        /// Counts the number of living cells in the field.
+        /// </summary>
+        /// <param name="field">2D boolean array representing the game field.</param>
+        /// <returns>The count of living cells.</returns>
         public int CountLivingCells(bool[,] field)
         {
             int count = 0;
