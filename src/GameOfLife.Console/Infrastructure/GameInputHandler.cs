@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using GameOfLife.Core.Infrastucture;
+﻿using GameOfLife.Core.Infrastucture;
 using GameOfLife.Core.Interfaces;
 
 namespace GameOfLife.CLI.Infrastructure
