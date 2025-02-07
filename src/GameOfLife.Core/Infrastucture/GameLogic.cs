@@ -1,11 +1,11 @@
-﻿using GameOfLife.Interfaces;
+﻿using GameOfLife.Core.Interfaces;
 
-namespace GameOfLife.Infrastructure
+namespace GameOfLife.Core.Infrastucture
 {
     /// <summary>
     /// Implements the rules of 'Game of Life' to compute following states.
     /// </summary>
-    internal class GameLogic : IGameLogic
+    public class GameLogic : IGameLogic
     {
         /// <summary>
         /// Computes the next state of the game field by evaluating every cells neighbor count.
