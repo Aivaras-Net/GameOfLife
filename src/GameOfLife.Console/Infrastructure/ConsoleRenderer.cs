@@ -12,6 +12,7 @@ namespace GameOfLife.CLI.Infrastructure
         private char[,] _screenBuffer;
         private int _bufferWidth;
         private int _bufferHeight;
+        private bool _outputTruncated;
 
         /// <summary>
         /// Initializes the off–screen buffer for the current frame.
@@ -20,6 +21,7 @@ namespace GameOfLife.CLI.Infrastructure
         {
             _bufferWidth = Console.WindowWidth;
             _bufferHeight = Console.WindowHeight;
+            _outputTruncated = false;
             _screenBuffer = new char[_bufferHeight, _bufferWidth];
 
             // Fill buffer with spaces.
@@ -37,6 +39,17 @@ namespace GameOfLife.CLI.Infrastructure
         /// </summary>
         private void DrawString(string text, int x, int y)
         {
+            if(y<0 || y>= _bufferHeight)
+            {
+                _outputTruncated = true;
+                return;
+            }
+
+            if (x<0 || x+ text.Length > _bufferWidth)
+            {
+                _outputTruncated = true;
+            }
+
             if (y < 0 || y >= _bufferHeight) return;
 
             for (int i = 0; i < text.Length; i++)
@@ -52,6 +65,16 @@ namespace GameOfLife.CLI.Infrastructure
         /// </summary>
         public void Flush()
         {
+            if(_outputTruncated)
+            {
+                string truncMessage = "Output truncated. Select smaller fields or use bigger output window";
+                string paddedMessage = truncMessage.PadRight(_bufferWidth);
+                for(int j  = 0; j < _bufferWidth; j++)
+                {
+                    _screenBuffer[_bufferHeight - 1, j] = paddedMessage[j];
+                }
+            }
+
             Console.SetCursorPosition(0, 0);
             var sb = new StringBuilder();
             for (int i = 0; i < _bufferHeight; i++)

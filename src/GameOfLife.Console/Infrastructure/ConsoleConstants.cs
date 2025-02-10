@@ -10,7 +10,7 @@
         public const char BorderVertical = '|';
         public const char BorderHorizontal = '-';
         public const char BorderCorner = '+';
-        public const int CellWidthMultiplier = 2;
+        public const int CellWidthMultiplier = 1;
         public const int ConsoleCursorPositionX = 0;
         public const int ConsoleCursorPositionY = 0;
 
