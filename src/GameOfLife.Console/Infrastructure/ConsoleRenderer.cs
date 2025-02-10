@@ -29,9 +29,11 @@ namespace GameOfLife.CLI.Infrastructure
             {
                 for (int j = 0; j < _bufferWidth; j++)
                 {
-                    _screenBuffer[i, j] = ' ';
+                    _screenBuffer[i, j] = ConsoleConstants.EmptyBufferFill;
                 }
             }
+
+            DrawString(ConsoleConstants.Header, 0, 0);
         }
 
         /// <summary>
@@ -39,18 +41,18 @@ namespace GameOfLife.CLI.Infrastructure
         /// </summary>
         private void DrawString(string text, int x, int y)
         {
-            if(y<0 || y>= _bufferHeight)
+            if( y < 0 || y>= _bufferHeight)
             {
                 _outputTruncated = true;
                 return;
             }
 
-            if (x<0 || x+ text.Length > _bufferWidth)
+            if ( x < 0 || x+ text.Length > _bufferWidth)
             {
                 _outputTruncated = true;
             }
 
-            if (y < 0 || y >= _bufferHeight) return;
+            if ( y < 0 || y >= _bufferHeight) return;
 
             for (int i = 0; i < text.Length; i++)
             {
@@ -65,11 +67,11 @@ namespace GameOfLife.CLI.Infrastructure
         /// </summary>
         public void Flush()
         {
-            if(_outputTruncated)
+            if (_outputTruncated)
             {
-                string truncMessage = "Output truncated. Select smaller fields or use bigger output window";
+                string truncMessage = ConsoleConstants.TruncationMessage;
                 string paddedMessage = truncMessage.PadRight(_bufferWidth);
-                for(int j  = 0; j < _bufferWidth; j++)
+                for ( int j  = 0; j < _bufferWidth; j++)
                 {
                     _screenBuffer[_bufferHeight - 1, j] = paddedMessage[j];
                 }

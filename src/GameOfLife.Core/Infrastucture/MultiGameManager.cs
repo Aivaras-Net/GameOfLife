@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading;
-using GameOfLife.Core.Interfaces;
+﻿using GameOfLife.Core.Interfaces;
 
 namespace GameOfLife.Core.Infrastucture
 {
@@ -42,10 +40,11 @@ namespace GameOfLife.Core.Infrastucture
         /// </summary>
         public void Start()
         {
-            int numberOfGames = GetNumberOfGames();
+            int numberOfGames = _gameSetupInputHandler.GetNumberOfGames();
             int fieldSize = _gameSetupInputHandler.GetFieldSize();
             _fields = new bool[numberOfGames][,];
             _iterations = new int[numberOfGames];
+            int headerHeight = Constants.Headerheight;
 
             for (int i = 0; i < numberOfGames; i++)
             {
@@ -76,7 +75,7 @@ namespace GameOfLife.Core.Infrastucture
                 // Begin new frame by initializing the off–screen buffer.
                 _renderer.BeginFrame();
 
-                int boardWidth = (fieldSize * 2) + 20;
+                int boardWidth = (fieldSize) + 5; //magic numbers until the formatting of the field is finalised
                 int boardHeight = fieldSize + 5;
                 int maxColumns = Math.Max(1, Console.WindowWidth / boardWidth);
                 int columns = Math.Min(numberOfGames, maxColumns);
@@ -86,7 +85,7 @@ namespace GameOfLife.Core.Infrastucture
                     int colIndex = i % columns;
                     int rowIndex = i / columns;
                     int offsetX = colIndex * boardWidth;
-                    int offsetY = rowIndex * boardHeight;
+                    int offsetY = headerHeight + rowIndex * boardHeight;
 
                     int livingCells = _gameFieldAnalyzer.CountLivingCells(_fields[i]);
                     _renderer.Render(_fields[i], _iterations[i], livingCells, offsetX, offsetY);
@@ -98,18 +97,6 @@ namespace GameOfLife.Core.Infrastucture
                 _renderer.Flush();
                 Thread.Sleep(Constants.DefaultSleepTime);
             }
-        }
-
-        public int GetNumberOfGames()
-        {
-            int numberOfGames;
-            do
-            {
-                Console.Clear();
-                Console.WriteLine("Enter number of games to show (1-8): ");
-            }
-            while (!int.TryParse(Console.ReadLine(), out numberOfGames));
-            return numberOfGames;
         }
 
         /// <summary>

@@ -27,8 +27,16 @@
         /// <param name="message">The message to display.</param>
         void RenderMessage(string message);
 
+        /// <summary>
+        /// Initiates an empty off-screen buffer.
+        /// </summary>
         public void BeginFrame();
 
+        /// <summary>
+        /// Flushes the off–screen buffer to the console.
+        /// </summary>
         public void Flush();
+
+
     }
 }
