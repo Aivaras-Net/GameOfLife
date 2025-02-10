@@ -1,4 +1,6 @@
-﻿using GameOfLife.Core.Interfaces;
+﻿using System;
+using System.Threading;
+using GameOfLife.Core.Interfaces;
 
 namespace GameOfLife.Core.Infrastucture
 {
@@ -41,7 +43,6 @@ namespace GameOfLife.Core.Infrastucture
         public void Start()
         {
             int numberOfGames = GetNumberOfGames();
-
             int fieldSize = _gameSetupInputHandler.GetFieldSize();
             _fields = new bool[numberOfGames][,];
             _iterations = new int[numberOfGames];
@@ -52,21 +53,18 @@ namespace GameOfLife.Core.Infrastucture
                 _iterations[i] = 0;
             }
 
-            bool stopped = false;
-
-            while (!stopped)
+            while (true)
             {
                 GameCommand command = _gameInputHandler.GetCommand();
-
                 if (command == GameCommand.Quit)
                 {
                     _renderer.RenderMessage(Constants.ExitingGameMessage);
+                    _renderer.Flush();
                     break;
                 }
 
                 if (command == GameCommand.Save)
                 {
-                    // Optionally, save each game separately.
                     for (int i = 0; i < numberOfGames; i++)
                     {
                         string saveFolder = $"{Constants.DefaultSaveFolder}/Game{i + 1}";
@@ -75,15 +73,13 @@ namespace GameOfLife.Core.Infrastucture
                     _renderer.RenderMessage(Constants.GameSavedMessage);
                 }
 
-                //Console.Clear();
+                // Begin new frame by initializing the off–screen buffer.
+                _renderer.BeginFrame();
 
                 int boardWidth = (fieldSize * 2) + 20;
                 int boardHeight = fieldSize + 5;
-
-                int maxColums = Math.Max(1, Console.WindowWidth /  boardWidth);
-                int columns = Math.Min(numberOfGames, maxColums);
-
-                int rows = (int)Math.Ceiling(numberOfGames / (double)columns);
+                int maxColumns = Math.Max(1, Console.WindowWidth / boardWidth);
+                int columns = Math.Min(numberOfGames, maxColumns);
 
                 for (int i = 0; i < numberOfGames; i++)
                 {
@@ -98,10 +94,11 @@ namespace GameOfLife.Core.Infrastucture
                     _iterations[i]++;
                 }
 
+                // Flush the complete frame to the console.
+                _renderer.Flush();
                 Thread.Sleep(Constants.DefaultSleepTime);
             }
         }
-
 
         public int GetNumberOfGames()
         {
@@ -111,7 +108,7 @@ namespace GameOfLife.Core.Infrastucture
                 Console.Clear();
                 Console.WriteLine("Enter number of games to show (1-8): ");
             }
-            while(!int.TryParse(Console.ReadLine(), out numberOfGames));
+            while (!int.TryParse(Console.ReadLine(), out numberOfGames));
             return numberOfGames;
         }
 

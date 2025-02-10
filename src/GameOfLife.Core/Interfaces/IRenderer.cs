@@ -19,12 +19,16 @@
         /// <param name="livingCells">The number of living cells.</param>
         /// <param name="offsetX">The left offset for rendering the statistics.</param>
         /// <param name="offsetY">The top offset for rendering the statistics.</param>
-        void RenderStatistics(int iteration, int livingCells, int offsetX, int offsetY);
+        //void RenderStatistics(int iteration, int livingCells, int offsetX, int offsetY);
 
         /// <summary>
         /// Renders a temporary message.
         /// </summary>
         /// <param name="message">The message to display.</param>
         void RenderMessage(string message);
+
+        public void BeginFrame();
+
+        public void Flush();
     }
 }

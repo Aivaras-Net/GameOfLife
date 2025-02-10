@@ -5,11 +5,11 @@
     /// </summary>
     public static class ConsoleConstants
     {
-        public const string AliveCellSymbol = "░░";
-        public const string DeadCellSymbol = "▓▓";
-        public const string BorderVertical = "|";
-        public const string BorderHorizontal = "-";
-        public const string BorderCorner = "+";
+        public const char AliveCellSymbol = '░';
+        public const char DeadCellSymbol = '▓';
+        public const char BorderVertical = '|';
+        public const char BorderHorizontal = '-';
+        public const char BorderCorner = '+';
         public const int CellWidthMultiplier = 2;
         public const int ConsoleCursorPositionX = 0;
         public const int ConsoleCursorPositionY = 0;
