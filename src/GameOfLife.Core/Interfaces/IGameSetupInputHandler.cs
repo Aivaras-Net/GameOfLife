@@ -15,5 +15,11 @@ namespace GameOfLife.Core.Interfaces
         /// </summary>
         /// <returns>Selected game start mode</returns>
         GameStartMode GetGameStartMode();
+
+        /// <summary>
+        /// Retrieves the number of games to show at once.
+        /// </summary>
+        /// <returns>Number of games</returns>
+        public int GetNumberOfGames();
     }
 }
