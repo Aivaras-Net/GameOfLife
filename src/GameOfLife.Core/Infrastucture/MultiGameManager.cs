@@ -15,9 +15,8 @@ namespace GameOfLife.Core.Infrastucture
         private readonly IGameInputHandler _gameInputHandler;
         private readonly ISaveFileSelector _saveFileSelector;
 
-        private const int NumberOfGames = 8;
-        private readonly bool[][,] _fields;
-        private readonly int[] _iterations;
+        private bool[][,] _fields;
+        private int[] _iterations;
 
         public MultiGameManager(IRenderer renderer,
                                 IGameLogic gameLogic,
@@ -34,9 +33,6 @@ namespace GameOfLife.Core.Infrastucture
             _gameFileManager = fileManager;
             _gameInputHandler = gameInputHandler;
             _saveFileSelector = saveFileSelector;
-
-            _fields = new bool[NumberOfGames][,];
-            _iterations = new int[NumberOfGames];
         }
 
         /// <summary>
@@ -44,9 +40,13 @@ namespace GameOfLife.Core.Infrastucture
         /// </summary>
         public void Start()
         {
-            int fieldSize = _gameSetupInputHandler.GetFieldSize();
+            int numberOfGames = GetNumberOfGames();
 
-            for (int i = 0; i < NumberOfGames; i++)
+            int fieldSize = _gameSetupInputHandler.GetFieldSize();
+            _fields = new bool[numberOfGames][,];
+            _iterations = new int[numberOfGames];
+
+            for (int i = 0; i < numberOfGames; i++)
             {
                 _fields[i] = InitializeField(fieldSize);
                 _iterations[i] = 0;
@@ -67,7 +67,7 @@ namespace GameOfLife.Core.Infrastucture
                 if (command == GameCommand.Save)
                 {
                     // Optionally, save each game separately.
-                    for (int i = 0; i < NumberOfGames; i++)
+                    for (int i = 0; i < numberOfGames; i++)
                     {
                         string saveFolder = $"{Constants.DefaultSaveFolder}/Game{i + 1}";
                         _gameFileManager.SaveGame(_fields[i], _iterations[i], saveFolder);
@@ -77,12 +77,15 @@ namespace GameOfLife.Core.Infrastucture
 
                 //Console.Clear();
 
-                int columns = 4;
-                int rows = 2;
                 int boardWidth = (fieldSize * 2) + 20;
-                int boardHeight = fieldSize + 3;
+                int boardHeight = fieldSize + 5;
 
-                for (int i = 0; i < NumberOfGames; i++)
+                int maxColums = Math.Max(1, Console.WindowWidth /  boardWidth);
+                int columns = Math.Min(numberOfGames, maxColums);
+
+                int rows = (int)Math.Ceiling(numberOfGames / (double)columns);
+
+                for (int i = 0; i < numberOfGames; i++)
                 {
                     int colIndex = i % columns;
                     int rowIndex = i / columns;
@@ -97,6 +100,19 @@ namespace GameOfLife.Core.Infrastucture
 
                 Thread.Sleep(Constants.DefaultSleepTime);
             }
+        }
+
+
+        public int GetNumberOfGames()
+        {
+            int numberOfGames;
+            do
+            {
+                Console.Clear();
+                Console.WriteLine("Enter number of games to show (1-8): ");
+            }
+            while(!int.TryParse(Console.ReadLine(), out numberOfGames));
+            return numberOfGames;
         }
 
         /// <summary>
