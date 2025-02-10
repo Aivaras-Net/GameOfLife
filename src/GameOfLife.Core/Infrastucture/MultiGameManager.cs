@@ -74,6 +74,7 @@ namespace GameOfLife.Core.Infrastucture
                     }
                     _renderer.RenderMessage(Constants.GameSavedMessage);
                 }
+
                 if (command == GameCommand.Stop)
                 {
                     if (numberOfGames > 1)

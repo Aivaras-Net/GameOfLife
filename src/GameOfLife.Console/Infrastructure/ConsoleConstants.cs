@@ -16,6 +16,7 @@
         public const int ConsoleCursorPositionY = 0;
 
         public const string Header = "I-current iteration; LC- the number of living cells";
+        public const string CommandGuide = "Press: S - Save ; P - Pause; Q - Exit";
         public const string TruncationMessage = "Output truncated. Select smaller fields or use bigger output window.";
         public const string ConcurentGameNumberPrompt = "Enter number of games to show (1-8): ";
         public static readonly int[] PresetFieldSizes = { 10, 20, 30 };
@@ -25,7 +26,6 @@
         public const string ArrowPointer = ">> ";
         public const string NoArrowPrefix = "    ";
 
-        public const string CommandGuide = "S to Save|Q to Stop"; //Will be updated for specific fields
         public const string GameStartModePromptMessage = "Select an option:";
         public const string LoadGameOptionMessage = "L: Load game";
         public const string NewGameOptionMessage = "N: New game";

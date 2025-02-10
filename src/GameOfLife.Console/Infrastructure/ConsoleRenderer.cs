@@ -34,6 +34,7 @@ namespace GameOfLife.CLI.Infrastructure
             }
 
             DrawString(ConsoleConstants.Header, 0, 0);
+            DrawString(ConsoleConstants.CommandGuide, 0, 1);
         }
 
         /// <summary>
@@ -41,13 +42,13 @@ namespace GameOfLife.CLI.Infrastructure
         /// </summary>
         private void DrawString(string text, int x, int y)
         {
-            if( y < 0 || y>= _bufferHeight)
+            if (y < 0 || y >= _bufferHeight)
             {
                 _outputTruncated = true;
                 return;
             }
 
-            if ( x < 0 || x+ text.Length > _bufferWidth)
+            if (x < 0 || x+ text.Length > _bufferWidth)
             {
                 _outputTruncated = true;
             }
@@ -71,7 +72,7 @@ namespace GameOfLife.CLI.Infrastructure
             {
                 string truncMessage = ConsoleConstants.TruncationMessage;
                 string paddedMessage = truncMessage.PadRight(_bufferWidth);
-                for ( int j  = 0; j < _bufferWidth; j++)
+                for (int j = 0; j < _bufferWidth; j++)
                 {
                     _screenBuffer[_bufferHeight - 1, j] = paddedMessage[j];
                 }
@@ -108,19 +109,18 @@ namespace GameOfLife.CLI.Infrastructure
                            int offsetY = ConsoleConstants.ConsoleCursorPositionY
                            )
         {
-            // Render command guide and statistics.
-            DrawString(ConsoleConstants.CommandGuide, offsetX, offsetY);
-            string stats = string.Format(ConsoleConstants.GameStatisticsFormat,gameId, iteration, livingCells);
+            // Render statistics.
+            string stats = string.Format(ConsoleConstants.GameStatisticsFormat, gameId, iteration, livingCells);
             if (paused)
             {
                 stats += " (Paused)";
             }
-            DrawString(stats,offsetX, offsetY +1);
+            DrawString(stats, offsetX, offsetY);
 
             int rows = field.GetLength(0);
             int cols = field.GetLength(1);
             int fieldStartX = offsetX;
-            int fieldStartY = offsetY + 2;
+            int fieldStartY = offsetY + 1;
 
             // Prepare horizontal border string.
             string horizontalBorder = ConsoleConstants.BorderCorner +
