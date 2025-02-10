@@ -15,15 +15,15 @@ namespace GameOfLife.CLI.Infrastructure
         public GameCommand GetCommand()
         {
             if (!Console.KeyAvailable)
-            {
                 return GameCommand.None;
-            }
 
             ConsoleKeyInfo keyInfo = Console.ReadKey(true);
             switch (keyInfo.Key)
             {
                 case ConsoleKey.S:
                     return GameCommand.Save;
+                case ConsoleKey.P:
+                    return GameCommand.Stop;
                 case ConsoleKey.Q:
                     return GameCommand.Quit;
                 default:

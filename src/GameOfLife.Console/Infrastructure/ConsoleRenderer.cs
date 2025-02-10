@@ -99,11 +99,21 @@ namespace GameOfLife.CLI.Infrastructure
         /// <param name="livingCells">Number of living cells.</param>
         /// <param name="offsetX">X coordinate offset for rendering.</param>
         /// <param name="offsetY">Y coordinate offset for rendering.</param>
-        public void Render(bool[,] field, int iteration, int livingCells, int offsetX = ConsoleConstants.ConsoleCursorPositionX, int offsetY = ConsoleConstants.ConsoleCursorPositionY)
+        public void Render(bool[,] field,
+                           int iteration,
+                           int livingCells,
+                           int offsetX = ConsoleConstants.ConsoleCursorPositionX,
+                           int offsetY = ConsoleConstants.ConsoleCursorPositionY,
+                           bool paused = false)
         {
             // Render command guide and statistics.
             DrawString(ConsoleConstants.CommandGuide, offsetX, offsetY);
-            DrawString(string.Format(ConsoleConstants.GameStatisticsFormat, iteration, livingCells), offsetX, offsetY + 1);
+            string stats = string.Format(ConsoleConstants.GameStatisticsFormat, iteration, livingCells);
+            if (paused)
+            {
+                stats += " (Paused)";
+            }
+            DrawString(stats,offsetX, offsetY +1);
 
             int rows = field.GetLength(0);
             int cols = field.GetLength(1);
@@ -143,6 +153,13 @@ namespace GameOfLife.CLI.Infrastructure
             int messageY = Console.WindowHeight - 1;
             // Pad the message to clear the line.
             DrawString(message.PadRight(Console.WindowWidth), 0, messageY);
+        }
+
+        public string Prompt(string message)
+        {
+            RenderMessage(message);
+            Flush();
+            return Console.ReadLine();
         }
     }
 }

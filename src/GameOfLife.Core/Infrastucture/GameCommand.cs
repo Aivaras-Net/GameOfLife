@@ -7,6 +7,7 @@
     {
         None,
         Save,
+        Stop,
         Quit
     }
 }

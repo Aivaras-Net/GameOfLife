@@ -16,6 +16,7 @@ namespace GameOfLife.Core.Infrastucture
         private readonly ISaveFileSelector _saveFileSelector;
 
         private bool[][,] _fields;
+        private bool[] _paused;
         private int[] _iterations;
 
         public MultiGameManager(IRenderer renderer,
@@ -44,12 +45,14 @@ namespace GameOfLife.Core.Infrastucture
             int fieldSize = _gameSetupInputHandler.GetFieldSize();
             _fields = new bool[numberOfGames][,];
             _iterations = new int[numberOfGames];
+            _paused = new bool[numberOfGames];
             int headerHeight = Constants.Headerheight;
 
             for (int i = 0; i < numberOfGames; i++)
             {
                 _fields[i] = InitializeField(fieldSize);
                 _iterations[i] = 0;
+                _paused[i] = false;
             }
 
             while (true)
@@ -71,11 +74,41 @@ namespace GameOfLife.Core.Infrastucture
                     }
                     _renderer.RenderMessage(Constants.GameSavedMessage);
                 }
+                if (command == GameCommand.Stop)
+                {
+                    if (numberOfGames > 1)
+                    {
+                        string input =_renderer.Prompt("Enter 0 to toggle pause state for all games or a game number (1-" + numberOfGames + ") for a specific game:");
+                        if( int.TryParse(input, out int selection))
+                            if (selection == 0)
+                            {
+                                for (int i = 0; i <= numberOfGames; i++)
+                                {
+                                    _paused[i] = !_paused[i];
+                                }
+                                _renderer.RenderMessage("Toggled pause state for all games.");
+                            }
+                        else if (selection >= 1 && selection <= numberOfGames)
+                            {
+                                _paused[selection -1] = !_paused[selection -1];
+                                _renderer.RenderMessage($"Game {selection} pause state changed");
+                            }
+                        else
+                            {
+                                _renderer.RenderMessage("Invalid selection for toffling pause state");
+                            }
+                    }
+                    else
+                    {
+                        _paused[0] = !_paused[0];
+                        _renderer.RenderMessage(_paused[0] ? "Game paused." : "Game resumed");
+                    }
+                }
 
                 // Begin new frame by initializing the off–screen buffer.
                 _renderer.BeginFrame();
 
-                int boardWidth = (fieldSize) + 5; //magic numbers until the formatting of the field is finalised
+                int boardWidth = (fieldSize) + 10; //magic numbers until the formatting of the field is finalised
                 int boardHeight = fieldSize + 5;
                 int maxColumns = Math.Max(1, Console.WindowWidth / boardWidth);
                 int columns = Math.Min(numberOfGames, maxColumns);
@@ -88,9 +121,13 @@ namespace GameOfLife.Core.Infrastucture
                     int offsetY = headerHeight + rowIndex * boardHeight;
 
                     int livingCells = _gameFieldAnalyzer.CountLivingCells(_fields[i]);
-                    _renderer.Render(_fields[i], _iterations[i], livingCells, offsetX, offsetY);
-                    _fields[i] = _gameLogic.ComputeNextState(_fields[i]);
-                    _iterations[i]++;
+                    _renderer.Render(_fields[i], _iterations[i], livingCells, offsetX, offsetY, _paused[i]);
+
+                    if (!_paused[i])
+                    {
+                        _fields[i] = _gameLogic.ComputeNextState(_fields[i]);
+                        _iterations[i]++;
+                    }
                 }
 
                 // Flush the complete frame to the console.
