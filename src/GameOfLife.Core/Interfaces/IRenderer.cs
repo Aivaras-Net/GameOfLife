@@ -10,7 +10,7 @@
         /// <param name="livingCells">The number of living cells.</param>
         /// <param name="offsetX">The left offset for rendering.</param>
         /// <param name="offsetY">The top offset for rendering.</param>
-        void Render(bool[,] field, int iteration, int livingCells, int offsetX, int offsetY, bool paused);
+        void Render(bool[,] field,int gameID, int iteration, int livingCells, bool paused, int offsetX, int offsetY);
 
         /// <summary>
         /// Renders game statistics above the game field.

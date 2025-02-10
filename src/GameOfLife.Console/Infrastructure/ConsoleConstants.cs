@@ -36,7 +36,7 @@
         public const string GameSavedSuccessMessage = "Game saved successfully.";
         public const string ExitingGameMessage = "Exiting game...";
         public const string FailedToLoadGameMessage = "Failed to load game: {0}";
-        public const string GameStatisticsFormat = "I:{0}|LC:{1}";
+        public const string GameStatisticsFormat = "ID:{0}|I:{1}|LC:{2}";
 
         public const string DefaultSaveFolder = "Saves";
         public const string SaveFileExtension = "*.json";

@@ -100,15 +100,17 @@ namespace GameOfLife.CLI.Infrastructure
         /// <param name="offsetX">X coordinate offset for rendering.</param>
         /// <param name="offsetY">Y coordinate offset for rendering.</param>
         public void Render(bool[,] field,
+                           int gameId,
                            int iteration,
                            int livingCells,
+                           bool paused = false,
                            int offsetX = ConsoleConstants.ConsoleCursorPositionX,
-                           int offsetY = ConsoleConstants.ConsoleCursorPositionY,
-                           bool paused = false)
+                           int offsetY = ConsoleConstants.ConsoleCursorPositionY
+                           )
         {
             // Render command guide and statistics.
             DrawString(ConsoleConstants.CommandGuide, offsetX, offsetY);
-            string stats = string.Format(ConsoleConstants.GameStatisticsFormat, iteration, livingCells);
+            string stats = string.Format(ConsoleConstants.GameStatisticsFormat,gameId, iteration, livingCells);
             if (paused)
             {
                 stats += " (Paused)";

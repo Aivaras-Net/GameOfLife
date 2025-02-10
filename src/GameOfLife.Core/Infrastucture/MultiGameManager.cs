@@ -121,7 +121,7 @@ namespace GameOfLife.Core.Infrastucture
                     int offsetY = headerHeight + rowIndex * boardHeight;
 
                     int livingCells = _gameFieldAnalyzer.CountLivingCells(_fields[i]);
-                    _renderer.Render(_fields[i], _iterations[i], livingCells, offsetX, offsetY, _paused[i]);
+                    _renderer.Render(_fields[i],i+1, _iterations[i], livingCells, _paused[i], offsetX, offsetY);
 
                     if (!_paused[i])
                     {
