@@ -1,5 +1,4 @@
-﻿using System;
-using System.Text;
+﻿using System.Text;
 using GameOfLife.Core.Interfaces;
 
 namespace GameOfLife.CLI.Infrastructure
@@ -113,7 +112,7 @@ namespace GameOfLife.CLI.Infrastructure
             string stats = string.Format(ConsoleConstants.GameStatisticsFormat, gameId, iteration, livingCells);
             if (paused)
             {
-                stats += " (Paused)";
+                stats += ConsoleConstants.PausedStateMessage;
             }
             DrawString(stats, offsetX, offsetY);
 
@@ -157,6 +156,11 @@ namespace GameOfLife.CLI.Infrastructure
             DrawString(message.PadRight(Console.WindowWidth), 0, messageY);
         }
 
+        /// <summary>
+        /// Displays a prompt message and returns user input.
+        /// </summary>
+        /// <param name="message">The prompt message to display.</param>
+        /// <returns>User input as a string.</returns>
         public string Prompt(string message)
         {
             RenderMessage(message);

@@ -37,6 +37,11 @@
         /// </summary>
         public void Flush();
 
+        /// <summary>
+        /// Displays a prompt message and retrieves the user input.
+        /// </summary>
+        /// <param name="message">The prompt message to display.</param>
+        /// <returns>The user's input as a string.</returns>
         public string Prompt(string message);
 
 

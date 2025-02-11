@@ -1,4 +1,5 @@
 ﻿using System.Text.Json;
+using GameOfLife.Core.Infrastructure;
 using GameOfLife.Core.Interfaces;
 
 namespace GameOfLife.Core.Infrastucture
@@ -44,14 +45,19 @@ namespace GameOfLife.Core.Infrastucture
 
         }
 
-
+        /// <summary>
+        /// Saves multiple game states to a single file in the specified directory.
+        /// </summary>
+        /// <param name="fields">Array of 2D boolean arrays representing multiple game fields.</param>
+        /// <param name="iterations">Array of iteration counts for each game state.</param>
+        /// <param name="directoryPath">Directory path to save the game states.</param>
         public void SaveAllGames(bool[][,] fields, int[] iterations, string directoryPath)
         {
             if (fields == null) throw new ArgumentNullException(nameof(fields));
             if (iterations == null) throw new ArgumentNullException(nameof(iterations));
             if (fields.Length != iterations.Length)
             {
-                throw new ArgumentException("Mismatch between fields and iterations length");
+                throw new ArgumentException(Constants.FieldAndIterationMismatchMessage);
             }
             if (string.IsNullOrWhiteSpace(directoryPath))
             {
@@ -117,6 +123,11 @@ namespace GameOfLife.Core.Infrastucture
             return (field, gameState.Iteration);
         }
 
+        /// <summary>
+        /// Loads multiple game states from the specified file.
+        /// </summary>
+        /// <param name="filePath">Path to the file containing saved multiple game states.</param>
+        /// <returns>A tuple containing an array of game fields and an array of iteration counts.</returns>
         public (bool[][,] fields, int[] iterarions) LoadMultipleGames(string filePath)
         {
             if (string.IsNullOrWhiteSpace(filePath))

@@ -1,6 +1,7 @@
 ﻿using GameOfLife.CLI.Infrastructure;
 using GameOfLife.Core.Interfaces;
 using GameOfLife.Core.Infrastucture;
+using GameOfLife.Core.Infrastructure;
 
 namespace GameOfLife.CLI
 {
@@ -15,9 +16,8 @@ namespace GameOfLife.CLI
             IGameInputHandler gameInputHandler = new GameInputHandler();
             IFileManager fileManager = new FileManager();
             ISaveFileSelector saveFileSelector = new SaveFileSelector();
-            //GameManager game = new GameManager(renderer, gameLogic, gameSetupInputHandler, gameFieldAnalyzer, fileManager, gameInputHandler, saveFileSelector);
-            //game.Start();
-            MultiGameManager multiGameManager = new MultiGameManager(renderer, gameLogic, gameSetupInputHandler, gameFieldAnalyzer, fileManager, gameInputHandler, saveFileSelector);
+            IGameCommandHandler commandHandler = new GameCommandHandler(gameInputHandler, renderer);
+            MultiGameManager multiGameManager = new MultiGameManager(renderer, gameLogic, gameSetupInputHandler, gameFieldAnalyzer, fileManager, saveFileSelector,commandHandler);
             multiGameManager.Start();
         }
     }
