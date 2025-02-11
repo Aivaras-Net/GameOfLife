@@ -16,10 +16,13 @@
         public const string NullOrEmptyFilePathMessage = "File path cannot be null or empty.";
         public const string InvalidGameStateDataMessage = "Invalid game state data";
 
-        public const string SaveFilePrefix = "SavedGame";
-        public const string SaveFileSearchPattern = SaveFilePrefix + "*.json";
-        public const string SaveFileExtension = ".json";
+        public const string SingleSaveFilePrefix = "Game";
+        public const string SingleFileSearchPattern = SingleSaveFilePrefix + "*.json";
 
+        public const string MultipleSaveFilePrefix = "MultipleGames";
+        public const string MultipleSaveFileSearchPattern = MultipleSaveFilePrefix + "*.json";
+
+        public const string SaveFileExtension = ".json";
         public const bool JsonWriteIndented = true;
         #endregion
 

@@ -67,12 +67,36 @@ namespace GameOfLife.Core.Infrastucture
 
                 if (command == GameCommand.Save)
                 {
-                    for (int i = 0; i < numberOfGames; i++)
+                    if (numberOfGames > 1)
                     {
-                        string saveFolder = $"{Constants.DefaultSaveFolder}/Game{i + 1}";
-                        _gameFileManager.SaveGame(_fields[i], _iterations[i], saveFolder);
+                        string input = _renderer.Prompt("Enter 0 to save all games in one file or a game number (1-" + numberOfGames + ") to save a specific game:");
+                        if (int.TryParse(input, out int selection))
+                        {
+                            if (selection == 0)
+                            {
+                                _gameFileManager.SaveAllGames(_fields, _iterations, Constants.DefaultSaveFolder);
+                                _renderer.RenderMessage("All games saved successfully.");
+                            }
+                            else if (selection >= 1 && selection <= numberOfGames)
+                            {
+                                _gameFileManager.SaveGame(_fields[selection - 1], _iterations[selection - 1], Constants.DefaultSaveFolder);
+                                _renderer.RenderMessage($"Game {selection} saved successfully");
+                            }
+                            else
+                            {
+                                _renderer.RenderMessage( "Invalid selection for saving.");
+                            }
+                        }
+                        else
+                        {
+                            _renderer.RenderMessage("Invalid input, Please enter a number");
+                        }
                     }
-                    _renderer.RenderMessage(Constants.GameSavedMessage);
+                    else
+                    {
+                        _gameFileManager.SaveGame(_fields[0], _iterations[0], Constants.DefaultSaveFolder);
+                        _renderer.RenderMessage(Constants.GameSavedMessage);
+                    }
                 }
 
                 if (command == GameCommand.Stop)
@@ -83,7 +107,7 @@ namespace GameOfLife.Core.Infrastucture
                         if( int.TryParse(input, out int selection))
                             if (selection == 0)
                             {
-                                for (int i = 0; i <= numberOfGames; i++)
+                                for (int i = 0; i < numberOfGames; i++)
                                 {
                                     _paused[i] = !_paused[i];
                                 }
