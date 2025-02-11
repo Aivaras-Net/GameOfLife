@@ -18,5 +18,7 @@
         (bool[,] field, int iteration) LoadGame(string filePath);
 
         public void SaveAllGames(bool[][,] fields, int[] iterations, string directoryPath);
+
+        public (bool[][,] fields, int[] iterarions) LoadMultipleGames(string filePath);
     }
 }

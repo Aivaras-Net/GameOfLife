@@ -71,15 +71,19 @@ namespace GameOfLife.CLI.Infrastructure
             Console.WriteLine(ConsoleConstants.GameStartModePromptMessage);
             Console.WriteLine(ConsoleConstants.LoadGameOptionMessage);
             Console.WriteLine(ConsoleConstants.NewGameOptionMessage);
-            ConsoleKeyInfo keyInfo = Console.ReadKey(true);
+            Console.WriteLine(ConsoleConstants.ParallelShowcaseOptionMessage);
 
-            if (keyInfo.Key == ConsoleKey.L)
+            ConsoleKeyInfo keyInfo = Console.ReadKey(true);
+            switch (keyInfo.Key)
             {
-                return GameStartMode.Load;
-            }
-            else
-            {
-                return GameStartMode.New;
+                case ConsoleKey.L:
+                    return GameStartMode.Load;
+                case ConsoleKey.N:
+                    return GameStartMode.New;
+                case ConsoleKey.P:
+                    return GameStartMode.ParralelShowcase;
+                default:
+                    return GameStartMode.New;
             }
         }
 

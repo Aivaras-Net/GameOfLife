@@ -116,6 +116,50 @@ namespace GameOfLife.Core.Infrastucture
             }
             return (field, gameState.Iteration);
         }
+
+        public (bool[][,] fields, int[] iterarions) LoadMultipleGames(string filePath)
+        {
+            if (string.IsNullOrWhiteSpace(filePath))
+            {
+                throw new ArgumentNullException(Constants.FilePathArgumentName, Constants.NullOrEmptyFilePathMessage);
+            }
+
+            string json = File.ReadAllText(filePath);
+            CombinedGameState combinedGame = JsonSerializer.Deserialize<CombinedGameState>(json);
+            if(combinedGame?.GameStates == null || combinedGame.GameStates.Length == 0)
+            {
+                throw new Exception(Constants.InvalidGameStateDataMessage);
+            }
+
+            int gameCount = combinedGame.GameStates.Length;
+            bool[][,] fields = new bool[gameCount][,];
+            int[] iterations = new int[gameCount];
+
+            for(int index =0; index < gameCount; index++)
+            {
+                GameState gameState = combinedGame.GameStates[index];
+                if (gameState?.Field == null || gameState.Field.Length == 0)
+                {
+                    throw new Exception(Constants.InvalidGameStateDataMessage);
+                }
+                int rows = gameState.Field.Length;
+                int cols = gameState.Field[0].Length;
+                bool[,] field = new bool[rows, cols];
+
+                for (int i = 0; i < rows; i++)
+                {
+                    for (int j = 0; j < cols; j++)
+                    {
+                        field[i,j] = gameState.Field[i][j];
+                    }
+                }
+
+                fields[index] = field;
+                iterations[index] = gameState.Iteration;
+            }
+
+            return (fields, iterations);
+        }
     }
 }
 

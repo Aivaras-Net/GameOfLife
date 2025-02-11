@@ -41,19 +41,66 @@ namespace GameOfLife.Core.Infrastucture
         /// </summary>
         public void Start()
         {
-            int numberOfGames = _gameSetupInputHandler.GetNumberOfGames();
-            int fieldSize = _gameSetupInputHandler.GetFieldSize();
-            _fields = new bool[numberOfGames][,];
-            _iterations = new int[numberOfGames];
-            _paused = new bool[numberOfGames];
-            int headerHeight = Constants.Headerheight;
-
-            for (int i = 0; i < numberOfGames; i++)
+            GameStartMode startMode = _gameSetupInputHandler.GetGameStartMode();
+            int numberOfGames;
+            int fieldSize;
+            
+            if (startMode == GameStartMode.Load)
             {
-                _fields[i] = InitializeField(fieldSize);
-                _iterations[i] = 0;
-                _paused[i] = false;
+                string filePath = _saveFileSelector.SelectSavedFilePath();
+                if (!string.IsNullOrWhiteSpace(filePath))
+                {
+                    if (Path.GetFileName(filePath).StartsWith(Constants.MultipleSaveFilePrefix))
+                    {
+                        var (loadedFields, loadedIteration) = _gameFileManager.LoadMultipleGames(filePath);
+                        numberOfGames = loadedFields.Length;
+                        fieldSize = loadedFields[0].GetLength(0);
+                        _fields = loadedFields;
+                        _iterations = loadedIteration;
+                        _paused = new bool[numberOfGames];
+                        _renderer.RenderMessage("Loaded multiple games successfully.");
+                    }
+                    else
+                    {
+                        var (loadedField, loadedIteration) = _gameFileManager.LoadGame(filePath);
+                        numberOfGames = 1;
+                        fieldSize = loadedField.GetLength(0);
+                        _fields = new bool[1][,] { loadedField };
+                        _iterations = new int[1] { loadedIteration };
+                        _paused = new bool[1];
+                        _renderer.RenderMessage("Loaded game successfully");
+                    }
+                    _renderer.Flush();
+                    Thread.Sleep(Constants.DefaultSleepTime);
+                }
+                else
+                {
+                    Console.WriteLine("AAA");
+                    return;
+                }
             }
+            else if (startMode == GameStartMode.ParralelShowcase)
+            {
+                _renderer.RenderMessage("Parallel Showcase is not implemented yet.");
+                _renderer.Flush();
+                Thread.Sleep(Constants.DefaultSleepTime);
+                return;
+            }
+            else
+            {
+                numberOfGames=_gameSetupInputHandler.GetNumberOfGames();
+                fieldSize=_gameSetupInputHandler.GetFieldSize();
+                _fields = new bool[numberOfGames][,];
+                _iterations = new int[numberOfGames];
+                _paused = new bool[numberOfGames];
+                for (int i = 0; i < numberOfGames; i++)
+                {
+                    _fields[i] = InitializeField(fieldSize);
+                    _iterations[i] = 0;
+                    _paused[i] = false;
+                }
+            }
+            int headerHeight = Constants.Headerheight;
 
             while (true)
             {
