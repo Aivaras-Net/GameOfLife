@@ -102,5 +102,21 @@ namespace GameOfLife.CLI.Infrastructure
             while (!int.TryParse(Console.ReadLine(), out numberOfGames));
             return numberOfGames;
         }
+
+        /// <summary>
+        /// Prompts the user to select number of games to show on the screen.
+        /// </summary>
+        /// <returns>Number of games.</returns>
+        public int GetNumberOfGames()
+        {
+            int numberOfGames;
+            do
+            {
+                Console.Clear();
+                Console.WriteLine(ConsoleConstants.ConcurentGameNumberPrompt);
+            }
+            while (!int.TryParse(Console.ReadLine(), out numberOfGames));
+            return numberOfGames;
+        }
     }
 }
