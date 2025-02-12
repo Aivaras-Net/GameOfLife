@@ -16,6 +16,7 @@
         public const int ConsoleCursorPositionY = 0;
 
         public const string Header = "I-current iteration; LC- the number of living cells";
+        public const string CommandGuide = "Press: S - Save ; P - Pause; Q - Exit";
         public const string TruncationMessage = "Output truncated. Select smaller fields or use bigger output window.";
         public const string ConcurentGameNumberPrompt = "Enter number of games to show (1-8): ";
         public static readonly int[] PresetFieldSizes = { 10, 20, 30 };
@@ -25,10 +26,10 @@
         public const string ArrowPointer = ">> ";
         public const string NoArrowPrefix = "    ";
 
-        public const string CommandGuide = "S to Save|Q to Stop"; //Will be updated for specific fields
         public const string GameStartModePromptMessage = "Select an option:";
         public const string LoadGameOptionMessage = "L: Load game";
         public const string NewGameOptionMessage = "N: New game";
+        public const string ParallelShowcaseOptionMessage = "P: Parallel Showcase";
         public const string NoSaveGamesExistMessage = "No save games exist.";
         public const string SelectSavedGameMessage = "Select a saved game to load:";
         public const string EnterSaveFileNumberMessage = "Enter the number of the save file:";
@@ -36,7 +37,8 @@
         public const string GameSavedSuccessMessage = "Game saved successfully.";
         public const string ExitingGameMessage = "Exiting game...";
         public const string FailedToLoadGameMessage = "Failed to load game: {0}";
-        public const string GameStatisticsFormat = "I:{0}|LC:{1}";
+        public const string GameStatisticsFormat = "ID:{0}|I:{1}|LC:{2}";
+        public const string PausedStateMessage = " (Paused)";
 
         public const string DefaultSaveFolder = "Saves";
         public const string SaveFileExtension = "*.json";

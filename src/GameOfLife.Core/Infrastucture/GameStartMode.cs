@@ -6,6 +6,7 @@
     public enum GameStartMode
     {
         New,
-        Load
+        Load,
+        ParralelShowcase
     }
 }
