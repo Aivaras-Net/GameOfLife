@@ -160,6 +160,9 @@ namespace GameOfLife.Core.Infrastructure
                 }
             });
 
+            // Sort games by ID to ensure the list index matches the game ID
+            _games = _games.OrderBy(g => g.Id).ToList();
+
             return true;
         }
 
