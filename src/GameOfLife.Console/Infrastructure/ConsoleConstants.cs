@@ -27,7 +27,7 @@
         public const string ArrowPointer = ">> ";
         public const string NoArrowPrefix = "    ";
 
-        public const string GameStartModePromptMessage = "Select an option:";
+        public const string GameStartModePromptMessage = "Select how to start the 'Game Of Life':";
         public const string LoadGameOptionMessage = "L: Load game";
         public const string NewGameOptionMessage = "N: New game";
         public const string ParallelShowcaseOptionMessage = "P: Parallel Showcase";

@@ -7,37 +7,16 @@ namespace GameOfLife.Core.Models
     /// </summary>
     public class GameInstance
     {
-        /// <summary>
-        /// Gets the current state of the game field.
-        /// </summary>
         public bool[,] Field { get; private set; }
 
-        /// <summary>
-        /// Gets the current iteration count.
-        /// </summary>
         public int Iteration { get; private set; }
 
-        /// <summary>
-        /// Gets or sets whether the game is paused.
-        /// </summary>
         public bool IsPaused { get; set; }
 
-        /// <summary>
-        /// Gets the current count of living cells.
-        /// </summary>
         public int LivingCells { get; private set; }
 
-        /// <summary>
-        /// Gets the unique identifier for this game instance.
-        /// </summary>
         public int Id { get; }
 
-        /// <summary>
-        /// Initializes a new instance of the GameInstance class.
-        /// </summary>
-        /// <param name="id">The unique identifier for this game.</param>
-        /// <param name="initialField">The initial state of the game field.</param>
-        /// <param name="iteration">The initial iteration count.</param>
         public GameInstance(int id, bool[,] initialField, int iteration = 0)
         {
             Id = id;

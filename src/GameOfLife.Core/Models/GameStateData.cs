@@ -5,21 +5,10 @@ namespace GameOfLife.Core.Models
     /// </summary>
     public class GameStateData
     {
-        /// <summary>
-        /// Gets or sets the game field as a jagged array of integers.
-        /// </summary>
         public int[][] Field { get; set; }
 
-        /// <summary>
-        /// Gets or sets the current iteration count.
-        /// </summary>
         public int Iteration { get; set; }
 
-        /// <summary>
-        /// Creates a GameStateData instance from a GameInstance.
-        /// </summary>
-        /// <param name="game">The game instance to convert.</param>
-        /// <returns>A new GameStateData object containing the game state.</returns>
         public static GameStateData FromGameInstance(GameInstance game)
         {
             return new GameStateData
