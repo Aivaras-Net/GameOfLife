@@ -147,10 +147,10 @@ namespace GameOfLife.Core.Infrastructure
 
         private bool SetupParallelShowcase()
         {
-            _fieldSize = 30;
+            _fieldSize = Constants.ParallelShowcaseFieldSize;
             _games = new List<GameInstance>();
 
-            Parallel.For(0, 1000, i =>
+            Parallel.For(0, Constants.ParallelShowcaseGameCount, i =>
             {
                 var field = InitializeField(_fieldSize);
                 var game = new GameInstance(i + 1, field);
@@ -189,14 +189,14 @@ namespace GameOfLife.Core.Infrastructure
         /// </summary>
         private void RenderFrame(int headerHeight)
         {
-            _renderer.BeginFrame(_games.Count == 1000);
+            _renderer.BeginFrame(_games.Count == Constants.ParallelShowcaseGameCount);
 
             int activeGames = _games.Count(g => !g.IsPaused);
             int totalLivingCells = _games.Sum(g => g.LivingCells);
 
             _renderer.RenderGlobalStats(activeGames, totalLivingCells);
 
-            if (_games.Count == 1000)
+            if (_games.Count == Constants.ParallelShowcaseGameCount)
             {
                 var game = _games[_displayedGameIndex];
                 _renderer.Render(game.Field, game.Id, game.Iteration,
@@ -204,8 +204,8 @@ namespace GameOfLife.Core.Infrastructure
             }
             else
             {
-                int boardWidth = _fieldSize + 10;
-                int boardHeight = _fieldSize + 5;
+                int boardWidth = Math.Max(_fieldSize + 2, Constants.MinimumStatsWidth); //+2 for borders
+                int boardHeight = _fieldSize + 4; // 2 for borders + 1 for stats + extra padding
                 int maxColumns = Math.Max(1, Console.WindowWidth / boardWidth);
                 int columns = Math.Min(_games.Count, maxColumns);
 
@@ -213,7 +213,7 @@ namespace GameOfLife.Core.Infrastructure
                 {
                     int colIndex = i % columns;
                     int rowIndex = i / columns;
-                    int offsetX = colIndex * boardWidth;
+                    int offsetX = colIndex * (boardWidth + 1);
                     int offsetY = headerHeight + rowIndex * boardHeight;
 
                     var game = _games[i];

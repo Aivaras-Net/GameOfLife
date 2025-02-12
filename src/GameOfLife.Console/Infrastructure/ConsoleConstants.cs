@@ -14,6 +14,9 @@
         public const int CellWidthMultiplier = 1;
         public const int ConsoleCursorPositionX = 0;
         public const int ConsoleCursorPositionY = 0;
+        public const int MessageSleepTime = 1500;
+        public const int MIN_GAMES = 1;
+        public const int MAX_GAMES = 8;
 
         public const string Header = "I-current iteration; LC- the number of living cells";
         public const string StandardCommandGuide = "Press: S - Save ; P - Pause; Q - Exit";

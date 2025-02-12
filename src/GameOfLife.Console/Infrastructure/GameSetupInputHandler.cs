@@ -8,9 +8,6 @@ namespace GameOfLife.CLI.Infrastructure
     /// </summary>
     internal class GameSetupInputHandler : IGameSetupInputHandler
     {
-        private const int MIN_GAMES = 1;
-        private const int MAX_GAMES = 8;
-
         /// <summary>
         /// Prompts the user to select or enter a field size.
         /// </summary>
@@ -47,7 +44,7 @@ namespace GameOfLife.CLI.Infrastructure
                 }
 
                 Console.WriteLine(ConsoleConstants.InvalidFieldSizeMessage);
-                Thread.Sleep(1500);
+                Thread.Sleep(ConsoleConstants.MessageSleepTime);
             }
         }
 
@@ -89,14 +86,14 @@ namespace GameOfLife.CLI.Infrastructure
                 Console.WriteLine(ConsoleConstants.ConcurentGameNumberPrompt);
 
                 if (int.TryParse(Console.ReadLine(), out numberOfGames) &&
-                    numberOfGames >= MIN_GAMES &&
-                    numberOfGames <= MAX_GAMES)
+                    numberOfGames >= ConsoleConstants.MIN_GAMES &&
+                    numberOfGames <= ConsoleConstants.MAX_GAMES)
                 {
                     return numberOfGames;
                 }
 
                 Console.WriteLine(ConsoleConstants.InvalidNumberOfGamesMessage);
-                Thread.Sleep(1500);
+                Thread.Sleep(ConsoleConstants.MessageSleepTime);
             }
         }
     }

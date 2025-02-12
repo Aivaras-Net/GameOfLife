@@ -6,6 +6,8 @@
     public static class Constants
     {
         public const int DefaultSleepTime = 1000;
+        public const int ParallelShowcaseFieldSize = 30;
+        public const int ParallelShowcaseGameCount = 1000;
 
         #region File manager constants
         public const string DirectoryPathArgumentName = "directoryPath";
@@ -26,6 +28,7 @@
         #endregion
 
         public const int Headerheight = 4;
+        public const int MinimumStatsWidth = 25;
         public const string DefaultSaveFolder = "Saves";
 
         public const string ExitingGameMessage = "Exiting game...";
