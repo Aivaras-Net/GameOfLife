@@ -10,7 +10,7 @@
         /// <param name="livingCells">The number of living cells.</param>
         /// <param name="offsetX">The left offset for rendering.</param>
         /// <param name="offsetY">The top offset for rendering.</param>
-        void Render(bool[,] field,int gameID, int iteration, int livingCells, bool paused, int offsetX, int offsetY);
+        void Render(bool[,] field, int gameId, int iteration, int livingCells, bool paused = false, int offsetX = 0, int offsetY = 0);
 
         /// <summary>
         /// Renders game statistics above the game field.
@@ -44,6 +44,11 @@
         /// <returns>The user's input as a string.</returns>
         public string Prompt(string message);
 
-
+        /// <summary>
+        /// Renders the global statistics for all games.
+        /// </summary>
+        /// <param name="activeGames">Number of active games</param>
+        /// <param name="totalLivingCells">Number of total living cells</param>
+        void RenderGlobalStats(int activeGames, int totalLivingCells);
     }
 }

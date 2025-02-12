@@ -27,7 +27,7 @@
         public const bool JsonWriteIndented = true;
         #endregion
 
-        public const int Headerheight = 3;
+        public const int Headerheight = 4;
         public const string DefaultSaveFolder = "Saves";
 
         public const string ExitingGameMessage = "Exiting game...";

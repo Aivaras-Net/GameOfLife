@@ -47,12 +47,12 @@ namespace GameOfLife.CLI.Infrastructure
                 return;
             }
 
-            if (x < 0 || x+ text.Length > _bufferWidth)
+            if (x < 0 || x + text.Length > _bufferWidth)
             {
                 _outputTruncated = true;
             }
 
-            if ( y < 0 || y >= _bufferHeight) return;
+            if (y < 0 || y >= _bufferHeight) return;
 
             for (int i = 0; i < text.Length; i++)
             {
@@ -166,6 +166,17 @@ namespace GameOfLife.CLI.Infrastructure
             RenderMessage(message);
             Flush();
             return Console.ReadLine();
+        }
+
+        /// <summary>
+        /// Renders global statistics about all games.
+        /// </summary>
+        /// <param name="activeGames">Number of active (non-paused) games.</param>
+        /// <param name="totalLivingCells">Total number of living cells across all games.</param>
+        public void RenderGlobalStats(int activeGames, int totalLivingCells)
+        {
+            string stats = string.Format(ConsoleConstants.GlobalStatisticsFormat, activeGames, totalLivingCells);
+            DrawString(stats, 0, 2);
         }
     }
 }

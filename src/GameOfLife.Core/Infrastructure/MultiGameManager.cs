@@ -172,10 +172,16 @@ namespace GameOfLife.Core.Infrastructure
         private void RenderFrame(int headerHeight)
         {
             _renderer.BeginFrame();
+
+            int activeGames = _paused.Count(p => !p);
+            int totalLivingCells = _fields.Sum(field => _gameFieldAnalyzer.CountLivingCells(field));
+
             int boardWidth = _fieldSize + 10; // Temporary magic number for formatting.
             int boardHeight = _fieldSize + 5;
             int maxColumns = Math.Max(1, Console.WindowWidth / boardWidth);
             int columns = Math.Min(_numberOfGames, maxColumns);
+
+            _renderer.RenderGlobalStats(activeGames, totalLivingCells);
 
             for (int i = 0; i < _numberOfGames; i++)
             {
