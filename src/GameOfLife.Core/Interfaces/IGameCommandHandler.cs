@@ -14,12 +14,14 @@
         /// <param name="onSaveSingle">Action to save a specific game (by zero-based index).</param>
         /// <param name="onTogglePauseAll">Action to toggle pause state for all games.</param>
         /// <param name="onTogglePauseSingle">Action to toggle pause state for a specific game (by zero-based index).</param>
+        /// <param name="onViewGame">Action to view a specific game (by zero-based index).</param>
         /// <returns>True if processing should continue; otherwise, false.</returns>
         bool ProcessCommand(
             int numberOfGames,
             Action onSaveAll,
             Action<int> onSaveSingle,
             Action onTogglePauseAll,
-            Action<int> onTogglePauseSingle);
+            Action<int> onTogglePauseSingle,
+            Action<int> onViewGame = null);
     }
 }

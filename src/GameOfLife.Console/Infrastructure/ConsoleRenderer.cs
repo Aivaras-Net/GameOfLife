@@ -12,11 +12,12 @@ namespace GameOfLife.CLI.Infrastructure
         private int _bufferWidth;
         private int _bufferHeight;
         private bool _outputTruncated;
+        private int _numberOfGames;
 
         /// <summary>
         /// Initializes the off–screen buffer for the current frame.
         /// </summary>
-        public void BeginFrame()
+        public void BeginFrame(bool isParallelShowcase = false)
         {
             _bufferWidth = Console.WindowWidth;
             _bufferHeight = Console.WindowHeight;
@@ -33,7 +34,10 @@ namespace GameOfLife.CLI.Infrastructure
             }
 
             DrawString(ConsoleConstants.Header, 0, 0);
-            DrawString(ConsoleConstants.CommandGuide, 0, 1);
+            string commandGuide = isParallelShowcase ?
+                ConsoleConstants.ParallelCommandGuide :
+                ConsoleConstants.StandardCommandGuide;
+            DrawString(commandGuide, 0, 1);
         }
 
         /// <summary>

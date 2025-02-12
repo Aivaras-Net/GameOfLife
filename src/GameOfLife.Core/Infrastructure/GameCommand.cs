@@ -8,6 +8,7 @@
         None,
         Save,
         Stop,
-        Quit
+        Quit,
+        View
     }
 }

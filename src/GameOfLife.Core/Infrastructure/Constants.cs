@@ -50,5 +50,8 @@
 
         public const string SavePromptFormat = "Enter 0 to save all games in one file or a game number (1-{0}) to save a specific game:";
         public const string TogglePausePromptFormat = "Enter 0 to toggle pause state for all games or a game number (1-{0}) for a specific game:";
+
+        public const string ViewGamePromptFormat = "Enter a game number (1-{0}) to view:";
+        public const string InvalidViewSelectionMessage = "Invalid selection for viewing.";
     }
 }

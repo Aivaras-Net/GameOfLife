@@ -20,6 +20,7 @@ namespace GameOfLife.Core.Infrastructure
         private int[] _iterations;
         private int _fieldSize;
         private int _numberOfGames;
+        private int _displayedGameIndex = 0;
 
         public MultiGameManager(IRenderer renderer,
                                 IGameLogic gameLogic,
@@ -63,6 +64,10 @@ namespace GameOfLife.Core.Infrastructure
                     onTogglePauseSingle: (index) =>
                     {
                         _paused[index] = !_paused[index];
+                    },
+                    onViewGame: (index) =>
+                    {
+                        _displayedGameIndex = index;
                     });
 
                 if (!continueGame)
@@ -78,7 +83,7 @@ namespace GameOfLife.Core.Infrastructure
         /// Performs initial game setup based on the chosen start mode.
         /// </summary>
         /// <returns>True if setup was successful; otherwise, false.</returns>
-        private bool SetupGame() //Would be better in their own class but there are enought classes already for this small project
+        private bool SetupGame()
         {
             GameStartMode startMode = _gameSetupInputHandler.GetGameStartMode();
             if (startMode == GameStartMode.Load)
@@ -87,10 +92,7 @@ namespace GameOfLife.Core.Infrastructure
             }
             else if (startMode == GameStartMode.ParralelShowcase)
             {
-                _renderer.RenderMessage(Constants.ParallelShowcaseNotImplementedMessage);
-                _renderer.Flush();
-                Thread.Sleep(Constants.DefaultSleepTime);
-                return false;
+                return SetupParallelShowcase();
             }
             else
             {
@@ -148,6 +150,24 @@ namespace GameOfLife.Core.Infrastructure
             return true;
         }
 
+        private bool SetupParallelShowcase()
+        {
+            _numberOfGames = 1000; // Fixed number for showcase
+            _fieldSize = 30; // Fixed size for showcase
+            _fields = new bool[_numberOfGames][,];
+            _iterations = new int[_numberOfGames];
+            _paused = new bool[_numberOfGames];
+
+            Parallel.For(0, _numberOfGames, i =>
+            {
+                _fields[i] = InitializeField(_fieldSize);
+                _iterations[i] = 0;
+                _paused[i] = false;
+            });
+
+            return true;
+        }
+
         /// <summary>
         /// Initializes a game field with a random configuration.
         /// </summary>
@@ -171,27 +191,42 @@ namespace GameOfLife.Core.Infrastructure
         /// </summary>
         private void RenderFrame(int headerHeight)
         {
-            _renderer.BeginFrame();
+            _renderer.BeginFrame(_numberOfGames == 1000);
 
             int activeGames = _paused.Count(p => !p);
             int totalLivingCells = _fields.Sum(field => _gameFieldAnalyzer.CountLivingCells(field));
 
-            int boardWidth = _fieldSize + 10; // Temporary magic number for formatting.
-            int boardHeight = _fieldSize + 5;
-            int maxColumns = Math.Max(1, Console.WindowWidth / boardWidth);
-            int columns = Math.Min(_numberOfGames, maxColumns);
-
             _renderer.RenderGlobalStats(activeGames, totalLivingCells);
 
-            for (int i = 0; i < _numberOfGames; i++)
+            // In parallel showcase, only show the selected game
+            if (_numberOfGames == 1000)
             {
-                int colIndex = i % columns;
-                int rowIndex = i / columns;
-                int offsetX = colIndex * boardWidth;
-                int offsetY = headerHeight + rowIndex * boardHeight;
+                int livingCells = _gameFieldAnalyzer.CountLivingCells(_fields[_displayedGameIndex]);
+                _renderer.Render(_fields[_displayedGameIndex],
+                                _displayedGameIndex + 1,
+                                _iterations[_displayedGameIndex],
+                                livingCells,
+                                _paused[_displayedGameIndex],
+                                0,
+                                headerHeight);
+            }
+            else // Normal mode - show all games
+            {
+                int boardWidth = _fieldSize + 10;
+                int boardHeight = _fieldSize + 5;
+                int maxColumns = Math.Max(1, Console.WindowWidth / boardWidth);
+                int columns = Math.Min(_numberOfGames, maxColumns);
 
-                int livingCells = _gameFieldAnalyzer.CountLivingCells(_fields[i]);
-                _renderer.Render(_fields[i], i + 1, _iterations[i], livingCells, _paused[i], offsetX, offsetY);
+                for (int i = 0; i < _numberOfGames; i++)
+                {
+                    int colIndex = i % columns;
+                    int rowIndex = i / columns;
+                    int offsetX = colIndex * boardWidth;
+                    int offsetY = headerHeight + rowIndex * boardHeight;
+
+                    int livingCells = _gameFieldAnalyzer.CountLivingCells(_fields[i]);
+                    _renderer.Render(_fields[i], i + 1, _iterations[i], livingCells, _paused[i], offsetX, offsetY);
+                }
             }
             _renderer.Flush();
         }
@@ -201,14 +236,14 @@ namespace GameOfLife.Core.Infrastructure
         /// </summary>
         private void UpdateGames()
         {
-            for (int i = 0; i < _numberOfGames; i++)
+            Parallel.For(0, _numberOfGames, i =>
             {
                 if (!_paused[i])
                 {
                     _fields[i] = _gameLogic.ComputeNextState(_fields[i]);
                     _iterations[i]++;
                 }
-            }
+            });
         }
     }
 }

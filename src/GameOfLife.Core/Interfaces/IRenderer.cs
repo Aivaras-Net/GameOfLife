@@ -30,7 +30,7 @@
         /// <summary>
         /// Initiates an empty off-screen buffer.
         /// </summary>
-        public void BeginFrame();
+        void BeginFrame(bool isParallelShowcase = false);
 
         /// <summary>
         /// Flushes the off–screen buffer to the console.
