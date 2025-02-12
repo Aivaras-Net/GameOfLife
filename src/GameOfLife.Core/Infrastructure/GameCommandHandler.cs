@@ -50,7 +50,7 @@ namespace GameOfLife.Core.Infrastructure
                     HandleStopCommand(numberOfGames, onTogglePauseAll, onTogglePauseSingle);
                     break;
 
-                case GameCommand.View when numberOfGames == 1000 && onViewGame != null:
+                case GameCommand.View when numberOfGames == Constants.ParallelShowcaseGameCount && onViewGame != null:
                     HandleViewCommand(numberOfGames, onViewGame);
                     break;
 
@@ -142,6 +142,11 @@ namespace GameOfLife.Core.Infrastructure
             }
         }
 
+        /// <summary>
+        /// Handles the view command for parallel showcase.
+        /// </summary>
+        /// <param name="numberOfGames">Number of active games.</param>
+        /// <param name="onViewGame">Action to change the game that is being viewed.</param>
         private void HandleViewCommand(int numberOfGames, Action<int> onViewGame)
         {
             string prompt = string.Format(Constants.ViewGamePromptFormat, numberOfGames);

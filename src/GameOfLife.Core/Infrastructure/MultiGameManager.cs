@@ -95,6 +95,10 @@ namespace GameOfLife.Core.Infrastructure
             }
         }
 
+        /// <summary>
+        /// Perform game setup based on loading a saved game.
+        /// </summary>
+        /// <returns>True if setup was successful; otherwise, false.</returns>
         private bool SetupFromLoad()
         {
             string filePath = _saveFileSelector.SelectSavedFilePath();
@@ -131,6 +135,10 @@ namespace GameOfLife.Core.Infrastructure
             }
         }
 
+        /// <summary>
+        /// Performs game setup for a new game.
+        /// </summary>
+        /// <returns>True if setup was successful; otherwise, false.</returns>
         private bool SetupNewGame()
         {
             int numberOfGames = _gameSetupInputHandler.GetNumberOfGames();
@@ -145,6 +153,10 @@ namespace GameOfLife.Core.Infrastructure
             return true;
         }
 
+        /// <summary>
+        /// Performs game setup for a parallel showcase.
+        /// </summary>
+        /// <returns>True if setup was successful; otherwise, false.</returns>
         private bool SetupParallelShowcase()
         {
             _fieldSize = Constants.ParallelShowcaseFieldSize;

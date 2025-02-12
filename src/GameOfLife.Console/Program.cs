@@ -15,7 +15,7 @@ namespace GameOfLife.CLI
             IFileManager fileManager = new FileManager();
             ISaveFileSelector saveFileSelector = new SaveFileSelector();
             IGameCommandHandler commandHandler = new GameCommandHandler(gameInputHandler, renderer);
-            MultiGameManager multiGameManager = new MultiGameManager(renderer, gameLogic, gameSetupInputHandler, fileManager, saveFileSelector,commandHandler);
+            MultiGameManager multiGameManager = new MultiGameManager(renderer, gameLogic, gameSetupInputHandler, fileManager, saveFileSelector, commandHandler);
             multiGameManager.Start();
         }
     }
