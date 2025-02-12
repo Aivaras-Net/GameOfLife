@@ -8,14 +8,12 @@
         public const int DefaultSleepTime = 1000;
 
         #region File manager constants
-        public const string FieldArgumentName = "field";
         public const string DirectoryPathArgumentName = "directoryPath";
         public const string FilePathArgumentName = "filePath";
 
         public const string NullOrEmptyDirectoryPathMessage = "Directory path cannot be null or empty.";
         public const string NullOrEmptyFilePathMessage = "File path cannot be null or empty.";
         public const string InvalidGameStateDataMessage = "Invalid game state data";
-        public const string FieldAndIterationMismatchMessage = "Mismatch between fields and iterations length";
 
         public const string SingleSaveFilePrefix = "Game";
         public const string SingleFileSearchPattern = SingleSaveFilePrefix + "*.json";
@@ -42,7 +40,6 @@
         public const string SpecificGamePauseStateChangedMessageFormat = "Game {0} pause state changed.";
         public const string InvalidTogglePauseSelectionMessage = "Invalid selection for toggling pause state.";
         public const string GamePauseToggledMessage = "Game pause state toggled.";
-        public const string ParallelShowcaseNotImplementedMessage = "Parallel Showcase is not implemented yet.";
         public const string NoValidFileSelectedMessage = "No valid file selected.";
         public const string GameLoadedSuccessfullyMessage = "Loaded game(s) successfully.";
 
@@ -53,5 +50,7 @@
 
         public const string ViewGamePromptFormat = "Enter a game number (1-{0}) to view:";
         public const string InvalidViewSelectionMessage = "Invalid selection for viewing.";
+
+        public const string ViewGameChangedMessageFormat = "Now viewing game {0}";
     }
 }

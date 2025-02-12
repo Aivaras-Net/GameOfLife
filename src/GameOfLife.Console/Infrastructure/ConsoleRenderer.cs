@@ -13,6 +13,14 @@ namespace GameOfLife.CLI.Infrastructure
         private int _bufferHeight;
         private bool _outputTruncated;
         private int _numberOfGames;
+        private string _currentMessage;
+        private int _messageDisplayFrames;
+
+        public ConsoleRenderer()
+        {
+            _messageDisplayFrames = 0;
+            _currentMessage = string.Empty;
+        }
 
         /// <summary>
         /// Initializes the off–screen buffer for the current frame.
@@ -38,6 +46,12 @@ namespace GameOfLife.CLI.Infrastructure
                 ConsoleConstants.ParallelCommandGuide :
                 ConsoleConstants.StandardCommandGuide;
             DrawString(commandGuide, 0, 1);
+
+            if (_messageDisplayFrames > 0)
+            {
+                DrawString(_currentMessage.PadRight(_bufferWidth), 0, _bufferHeight - 1);
+                _messageDisplayFrames--;
+            }
         }
 
         /// <summary>
@@ -155,9 +169,11 @@ namespace GameOfLife.CLI.Infrastructure
         /// <param name="message">The message to display.</param>
         public void RenderMessage(string message)
         {
+            _currentMessage = message;
+            _messageDisplayFrames = 2;
             int messageY = Console.WindowHeight - 1;
-            // Pad the message to clear the line.
             DrawString(message.PadRight(Console.WindowWidth), 0, messageY);
+            Flush();
         }
 
         /// <summary>
@@ -168,7 +184,6 @@ namespace GameOfLife.CLI.Infrastructure
         public string Prompt(string message)
         {
             RenderMessage(message);
-            Flush();
             return Console.ReadLine();
         }
 

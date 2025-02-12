@@ -149,6 +149,7 @@ namespace GameOfLife.Core.Infrastructure
             if (int.TryParse(input, out int selection) && selection >= 1 && selection <= numberOfGames)
             {
                 onViewGame(selection - 1);
+                _renderer.RenderMessage(string.Format(Constants.ViewGameChangedMessageFormat, selection));
             }
             else
             {
