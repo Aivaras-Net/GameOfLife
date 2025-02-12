@@ -1,31 +1,27 @@
 ﻿using GameOfLife.Core.Interfaces;
+using GameOfLife.Core.Models;
 
 namespace GameOfLife.Core.Infrastructure
 {
     /// <summary>
-    /// Manages initiation and execution of multiple simultaneous games.
+    /// Manages initiation and execution of single or multiple simultaneous games.
     /// </summary>
     public class MultiGameManager
     {
         private readonly IRenderer _renderer;
         private readonly IGameLogic _gameLogic;
         private readonly IGameSetupInputHandler _gameSetupInputHandler;
-        private readonly IGameFieldAnalyzer _gameFieldAnalyzer;
         private readonly IFileManager _gameFileManager;
         private readonly ISaveFileSelector _saveFileSelector;
         private readonly IGameCommandHandler _gameCommandHandler;
 
-        private bool[][,] _fields;
-        private bool[] _paused;
-        private int[] _iterations;
+        private List<GameInstance> _games;
         private int _fieldSize;
-        private int _numberOfGames;
         private int _displayedGameIndex = 0;
 
         public MultiGameManager(IRenderer renderer,
                                 IGameLogic gameLogic,
                                 IGameSetupInputHandler inputHandler,
-                                IGameFieldAnalyzer gameFieldAnalyzer,
                                 IFileManager fileManager,
                                 ISaveFileSelector saveFileSelector,
                                 IGameCommandHandler gameCommandHandler)
@@ -33,7 +29,6 @@ namespace GameOfLife.Core.Infrastructure
             _renderer = renderer;
             _gameLogic = gameLogic;
             _gameSetupInputHandler = inputHandler;
-            _gameFieldAnalyzer = gameFieldAnalyzer;
             _gameFileManager = fileManager;
             _saveFileSelector = saveFileSelector;
             _gameCommandHandler = gameCommandHandler;
@@ -51,19 +46,19 @@ namespace GameOfLife.Core.Infrastructure
             while (true)
             {
                 bool continueGame = _gameCommandHandler.ProcessCommand(
-                    _numberOfGames,
-                    onSaveAll: () => _gameFileManager.SaveAllGames(_fields, _iterations, Constants.DefaultSaveFolder),
-                    onSaveSingle: (index) => _gameFileManager.SaveGame(_fields[index], _iterations[index], Constants.DefaultSaveFolder),
+                    _games.Count,
+                    onSaveAll: () => _gameFileManager.SaveAllGames(_games, Constants.DefaultSaveFolder),
+                    onSaveSingle: (index) => _gameFileManager.SaveGame(_games[index], Constants.DefaultSaveFolder),
                     onTogglePauseAll: () =>
                     {
-                        for (int i = 0; i < _numberOfGames; i++)
+                        foreach (var game in _games)
                         {
-                            _paused[i] = !_paused[i];
+                            game.IsPaused = !game.IsPaused;
                         }
                     },
                     onTogglePauseSingle: (index) =>
                     {
-                        _paused[index] = !_paused[index];
+                        _games[index].IsPaused = !_games[index].IsPaused;
                     },
                     onViewGame: (index) =>
                     {
@@ -110,59 +105,59 @@ namespace GameOfLife.Core.Infrastructure
                 return false;
             }
 
-            if (Path.GetFileName(filePath).StartsWith(Constants.MultipleSaveFilePrefix))
+            try
             {
-                var (loadedFields, loadedIterations) = _gameFileManager.LoadMultipleGames(filePath);
-                _numberOfGames = loadedFields.Length;
-                _fieldSize = loadedFields[0].GetLength(0);
-                _fields = loadedFields;
-                _iterations = loadedIterations;
+                if (Path.GetFileName(filePath).StartsWith(Constants.MultipleSaveFilePrefix))
+                {
+                    _games = _gameFileManager.LoadMultipleGames(filePath).ToList();
+                }
+                else
+                {
+                    _games = new List<GameInstance> { _gameFileManager.LoadGame(filePath) };
+                }
+                _fieldSize = _games[0].Field.GetLength(0);
+
+                _renderer.RenderMessage(Constants.GameLoadedSuccessfullyMessage);
+                _renderer.Flush();
+                Thread.Sleep(Constants.DefaultSleepTime);
+                return true;
             }
-            else
+            catch (Exception ex)
             {
-                var (loadedField, loadedIteration) = _gameFileManager.LoadGame(filePath);
-                _numberOfGames = 1;
-                _fieldSize = loadedField.GetLength(0);
-                _fields = new bool[1][,] { loadedField };
-                _iterations = new int[1] { loadedIteration };
+                _renderer.RenderMessage(string.Format(Constants.LoadGameFailedMessageFormat, ex.Message));
+                _renderer.Flush();
+                Thread.Sleep(Constants.DefaultSleepTime);
+                return false;
             }
-            _paused = new bool[_numberOfGames];
-            _renderer.RenderMessage(Constants.GameLoadedSuccessfullyMessage);
-            _renderer.Flush();
-            Thread.Sleep(Constants.DefaultSleepTime);
-            return true;
         }
 
         private bool SetupNewGame()
         {
-            _numberOfGames = _gameSetupInputHandler.GetNumberOfGames();
+            int numberOfGames = _gameSetupInputHandler.GetNumberOfGames();
             _fieldSize = _gameSetupInputHandler.GetFieldSize();
-            _fields = new bool[_numberOfGames][,];
-            _iterations = new int[_numberOfGames];
-            _paused = new bool[_numberOfGames];
+            _games = new List<GameInstance>();
 
-            for (int i = 0; i < _numberOfGames; i++)
+            for (int i = 0; i < numberOfGames; i++)
             {
-                _fields[i] = InitializeField(_fieldSize);
-                _iterations[i] = 0;
-                _paused[i] = false;
+                var field = InitializeField(_fieldSize);
+                _games.Add(new GameInstance(i + 1, field));
             }
             return true;
         }
 
         private bool SetupParallelShowcase()
         {
-            _numberOfGames = 1000; // Fixed number for showcase
-            _fieldSize = 30; // Fixed size for showcase
-            _fields = new bool[_numberOfGames][,];
-            _iterations = new int[_numberOfGames];
-            _paused = new bool[_numberOfGames];
+            _fieldSize = 30;
+            _games = new List<GameInstance>();
 
-            Parallel.For(0, _numberOfGames, i =>
+            Parallel.For(0, 1000, i =>
             {
-                _fields[i] = InitializeField(_fieldSize);
-                _iterations[i] = 0;
-                _paused[i] = false;
+                var field = InitializeField(_fieldSize);
+                var game = new GameInstance(i + 1, field);
+                lock (_games)
+                {
+                    _games.Add(game);
+                }
             });
 
             return true;
@@ -191,41 +186,36 @@ namespace GameOfLife.Core.Infrastructure
         /// </summary>
         private void RenderFrame(int headerHeight)
         {
-            _renderer.BeginFrame(_numberOfGames == 1000);
+            _renderer.BeginFrame(_games.Count == 1000);
 
-            int activeGames = _paused.Count(p => !p);
-            int totalLivingCells = _fields.Sum(field => _gameFieldAnalyzer.CountLivingCells(field));
+            int activeGames = _games.Count(g => !g.IsPaused);
+            int totalLivingCells = _games.Sum(g => g.LivingCells);
 
             _renderer.RenderGlobalStats(activeGames, totalLivingCells);
 
-            // In parallel showcase, only show the selected game
-            if (_numberOfGames == 1000)
+            if (_games.Count == 1000)
             {
-                int livingCells = _gameFieldAnalyzer.CountLivingCells(_fields[_displayedGameIndex]);
-                _renderer.Render(_fields[_displayedGameIndex],
-                                _displayedGameIndex + 1,
-                                _iterations[_displayedGameIndex],
-                                livingCells,
-                                _paused[_displayedGameIndex],
-                                0,
-                                headerHeight);
+                var game = _games[_displayedGameIndex];
+                _renderer.Render(game.Field, game.Id, game.Iteration,
+                               game.LivingCells, game.IsPaused, 0, headerHeight);
             }
-            else // Normal mode - show all games
+            else
             {
                 int boardWidth = _fieldSize + 10;
                 int boardHeight = _fieldSize + 5;
                 int maxColumns = Math.Max(1, Console.WindowWidth / boardWidth);
-                int columns = Math.Min(_numberOfGames, maxColumns);
+                int columns = Math.Min(_games.Count, maxColumns);
 
-                for (int i = 0; i < _numberOfGames; i++)
+                for (int i = 0; i < _games.Count; i++)
                 {
                     int colIndex = i % columns;
                     int rowIndex = i / columns;
                     int offsetX = colIndex * boardWidth;
                     int offsetY = headerHeight + rowIndex * boardHeight;
 
-                    int livingCells = _gameFieldAnalyzer.CountLivingCells(_fields[i]);
-                    _renderer.Render(_fields[i], i + 1, _iterations[i], livingCells, _paused[i], offsetX, offsetY);
+                    var game = _games[i];
+                    _renderer.Render(game.Field, game.Id, game.Iteration,
+                                   game.LivingCells, game.IsPaused, offsetX, offsetY);
                 }
             }
             _renderer.Flush();
@@ -236,14 +226,7 @@ namespace GameOfLife.Core.Infrastructure
         /// </summary>
         private void UpdateGames()
         {
-            Parallel.For(0, _numberOfGames, i =>
-            {
-                if (!_paused[i])
-                {
-                    _fields[i] = _gameLogic.ComputeNextState(_fields[i]);
-                    _iterations[i]++;
-                }
-            });
+            Parallel.ForEach(_games, game => game.UpdateState(_gameLogic));
         }
     }
 }
