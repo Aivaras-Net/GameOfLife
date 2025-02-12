@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace GameOfLife.Core.Interfaces
+﻿namespace GameOfLife.Core.Interfaces
 {
     /// <summary>
     /// Defines methods for processing game commands.

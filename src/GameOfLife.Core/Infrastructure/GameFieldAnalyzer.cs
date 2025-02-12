@@ -1,6 +1,6 @@
 ﻿using GameOfLife.Core.Interfaces;
 
-namespace GameOfLife.Core.Infrastucture
+namespace GameOfLife.Core.Infrastructure
 {
     /// <summary>
     /// Provies functionality to analyze the game field.

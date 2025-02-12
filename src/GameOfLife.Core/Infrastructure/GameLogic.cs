@@ -1,6 +1,6 @@
 ﻿using GameOfLife.Core.Interfaces;
 
-namespace GameOfLife.Core.Infrastucture
+namespace GameOfLife.Core.Infrastructure
 {
     /// <summary>
     /// Implements the rules of 'Game of Life' to compute following states.

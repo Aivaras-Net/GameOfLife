@@ -1,8 +1,7 @@
 ﻿using System.Text.Json;
-using GameOfLife.Core.Infrastructure;
 using GameOfLife.Core.Interfaces;
 
-namespace GameOfLife.Core.Infrastucture
+namespace GameOfLife.Core.Infrastructure
 {
     /// <summary>
     /// Manages saving and loading game state to and from files.
@@ -105,7 +104,7 @@ namespace GameOfLife.Core.Infrastucture
 
             string json = File.ReadAllText(filePath);
             CombinedGameState combinedGame = JsonSerializer.Deserialize<CombinedGameState>(json);
-            if((combinedGame?.GameStates?.Length ?? 0) == 0)
+            if ((combinedGame?.GameStates?.Length ?? 0) == 0)
             {
                 throw new Exception(Constants.InvalidGameStateDataMessage);
             }
@@ -114,10 +113,10 @@ namespace GameOfLife.Core.Infrastucture
             bool[][,] fields = new bool[gameCount][,];
             int[] iterations = new int[gameCount];
 
-            for(int index =0; index < gameCount; index++)
+            for (int index = 0; index < gameCount; index++)
             {
                 GameState gameState = combinedGame.GameStates[index];
-                if ((gameState?.Field?.Length ?? 0) ==0)
+                if ((gameState?.Field?.Length ?? 0) == 0)
                 {
                     throw new Exception(Constants.InvalidGameStateDataMessage);
                 }
@@ -161,11 +160,11 @@ namespace GameOfLife.Core.Infrastucture
             int cols = jagged[0].Length;
             bool[,] array = new bool[rows, cols];
 
-            for (int i = 0;i < rows; i++)
+            for (int i = 0; i < rows; i++)
             {
-                for (int j = 0;j < cols; j++)
+                for (int j = 0; j < cols; j++)
                 {
-                    array[i,j] = jagged[i][j];
+                    array[i, j] = jagged[i][j];
                 }
             }
             return array;

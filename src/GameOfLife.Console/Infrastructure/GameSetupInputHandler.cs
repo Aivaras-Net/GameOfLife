@@ -1,4 +1,4 @@
-﻿using GameOfLife.Core.Infrastucture;
+﻿using GameOfLife.Core.Infrastructure;
 using GameOfLife.Core.Interfaces;
 
 namespace GameOfLife.CLI.Infrastructure
