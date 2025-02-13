@@ -1,3 +1,5 @@
+using GameOfLife.Core.Infrastructure;
+
 namespace GameOfLife.Core.Models
 {
     /// <summary>
@@ -45,7 +47,7 @@ namespace GameOfLife.Core.Models
                 result[i] = new int[cols];
                 for (int j = 0; j < cols; j++)
                 {
-                    result[i][j] = field[i, j] ? 1 : 0;
+                    result[i][j] = field[i, j] ? Constants.AliveCell : Constants.DeadCell;
                 }
             }
             return result;
@@ -64,7 +66,7 @@ namespace GameOfLife.Core.Models
 
             for (int i = 0; i < rows; i++)
                 for (int j = 0; j < cols; j++)
-                    result[i, j] = field[i][j] == 1;
+                    result[i, j] = field[i][j] == Constants.AliveCell;
             return result;
         }
     }

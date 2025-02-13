@@ -8,6 +8,8 @@
         public const int DefaultSleepTime = 1000;
         public const int ParallelShowcaseFieldSize = 30;
         public const int ParallelShowcaseGameCount = 1000;
+        public const int AliveCell = 1;
+        public const int DeadCell = 0;
 
         #region File manager constants
         public const string DirectoryPathArgumentName = "directoryPath";
