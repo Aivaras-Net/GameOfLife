@@ -12,11 +12,20 @@ namespace GameOfLife.CLI.Infrastructure
         private int _bufferWidth;
         private int _bufferHeight;
         private bool _outputTruncated;
+        private int _numberOfGames;
+        private string _currentMessage;
+        private int _messageDisplayFrames;
+
+        public ConsoleRenderer()
+        {
+            _messageDisplayFrames = 0;
+            _currentMessage = string.Empty;
+        }
 
         /// <summary>
         /// Initializes the off–screen buffer for the current frame.
         /// </summary>
-        public void BeginFrame()
+        public void BeginFrame(bool isParallelShowcase = false)
         {
             _bufferWidth = Console.WindowWidth;
             _bufferHeight = Console.WindowHeight;
@@ -33,7 +42,16 @@ namespace GameOfLife.CLI.Infrastructure
             }
 
             DrawString(ConsoleConstants.Header, 0, 0);
-            DrawString(ConsoleConstants.CommandGuide, 0, 1);
+            string commandGuide = isParallelShowcase ?
+                ConsoleConstants.ParallelCommandGuide :
+                ConsoleConstants.StandardCommandGuide;
+            DrawString(commandGuide, 0, 1);
+
+            if (_messageDisplayFrames > 0)
+            {
+                DrawString(_currentMessage.PadRight(_bufferWidth), 0, _bufferHeight - 1);
+                _messageDisplayFrames--;
+            }
         }
 
         /// <summary>
@@ -47,12 +65,12 @@ namespace GameOfLife.CLI.Infrastructure
                 return;
             }
 
-            if (x < 0 || x+ text.Length > _bufferWidth)
+            if (x < 0 || x + text.Length > _bufferWidth)
             {
                 _outputTruncated = true;
             }
 
-            if ( y < 0 || y >= _bufferHeight) return;
+            if (y < 0 || y >= _bufferHeight) return;
 
             for (int i = 0; i < text.Length; i++)
             {
@@ -151,9 +169,11 @@ namespace GameOfLife.CLI.Infrastructure
         /// <param name="message">The message to display.</param>
         public void RenderMessage(string message)
         {
+            _currentMessage = message;
+            _messageDisplayFrames = 2;
             int messageY = Console.WindowHeight - 1;
-            // Pad the message to clear the line.
             DrawString(message.PadRight(Console.WindowWidth), 0, messageY);
+            Flush();
         }
 
         /// <summary>
@@ -164,8 +184,18 @@ namespace GameOfLife.CLI.Infrastructure
         public string Prompt(string message)
         {
             RenderMessage(message);
-            Flush();
             return Console.ReadLine();
+        }
+
+        /// <summary>
+        /// Renders global statistics about all games.
+        /// </summary>
+        /// <param name="activeGames">Number of active (non-paused) games.</param>
+        /// <param name="totalLivingCells">Total number of living cells across all games.</param>
+        public void RenderGlobalStats(int activeGames, int totalLivingCells)
+        {
+            string stats = string.Format(ConsoleConstants.GlobalStatisticsFormat, activeGames, totalLivingCells);
+            DrawString(stats, 0, 2);
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿using GameOfLife.Core.Infrastucture;
+﻿using GameOfLife.Core.Infrastructure;
 
 namespace GameOfLife.Core.Interfaces
 {

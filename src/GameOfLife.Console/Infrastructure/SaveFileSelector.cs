@@ -6,10 +6,6 @@ namespace GameOfLife.CLI.Infrastructure
     {
         private readonly string saveFolder;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="SaveFileSelector"/> class.
-        /// </summary>
-        /// <param name="saveFolder">The directory where saved games are stored.</param>
         public SaveFileSelector(string saveFolder = ConsoleConstants.DefaultSaveFolder)
         {
             this.saveFolder = saveFolder;
@@ -23,6 +19,7 @@ namespace GameOfLife.CLI.Infrastructure
         {
             if (!Directory.Exists(saveFolder))
             {
+                Console.Clear();
                 Console.WriteLine(ConsoleConstants.NoSaveGamesExistMessage);
                 return null;
             }
@@ -34,25 +31,13 @@ namespace GameOfLife.CLI.Infrastructure
                 return null;
             }
 
-            Console.Clear();
-            Console.WriteLine(ConsoleConstants.SelectSavedGameMessage);
-            for (int i = 0; i < files.Length; i++)
-            {
-                Console.WriteLine($"{i + 1}: {Path.GetFileName(files[i])}");
-            }
+            string[] options = files.Select(Path.GetFileName).ToArray();
 
-            int selection;
-            while (true)
-            {
-                Console.WriteLine(ConsoleConstants.EnterSaveFileNumberMessage);
-                string input = Console.ReadLine();
-                if (int.TryParse(input, out selection) && selection >= 1 && selection <= files.Length)
-                {
-                    break;
-                }
-                Console.WriteLine(ConsoleConstants.InvalidSaveSelectionMessage);
-            }
-            return files[selection - 1];
+            int selection = ConsoleSelectionUtility.GetSelectionFromOptions(
+                ConsoleConstants.SelectSavedGameMessage,
+                options);
+
+            return files[selection];
         }
     }
 }

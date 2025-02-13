@@ -1,5 +1,4 @@
-﻿using GameOfLife.Core.Infrastucture;
-using GameOfLife.Core.Interfaces;
+﻿using GameOfLife.Core.Interfaces;
 
 namespace GameOfLife.Core.Infrastructure
 {
@@ -25,13 +24,15 @@ namespace GameOfLife.Core.Infrastructure
         /// <param name="onSaveSingle">Action to save a single game, given its index.</param>
         /// <param name="onTogglePauseAll">Action to toggle pause for all games.</param>
         /// <param name="onTogglePauseSingle">Action to toggle pause for a single game, given its index.</param>
+        /// <param name="onViewGame">Action to view a game, given its index.</param>
         /// <returns>False if the command is to quit; otherwise, true.</returns>
         public bool ProcessCommand(
             int numberOfGames,
             Action onSaveAll,
             Action<int> onSaveSingle,
             Action onTogglePauseAll,
-            Action<int> onTogglePauseSingle)
+            Action<int> onTogglePauseSingle,
+            Action<int> onViewGame = null)
         {
             GameCommand command = _gameInputHandler.GetCommand();
             switch (command)
@@ -47,6 +48,10 @@ namespace GameOfLife.Core.Infrastructure
 
                 case GameCommand.Stop:
                     HandleStopCommand(numberOfGames, onTogglePauseAll, onTogglePauseSingle);
+                    break;
+
+                case GameCommand.View when numberOfGames == Constants.ParallelShowcaseGameCount && onViewGame != null:
+                    HandleViewCommand(numberOfGames, onViewGame);
                     break;
 
                 default:
@@ -134,6 +139,26 @@ namespace GameOfLife.Core.Infrastructure
             {
                 onTogglePauseSingle(0);
                 _renderer.RenderMessage(Constants.GamePauseToggledMessage);
+            }
+        }
+
+        /// <summary>
+        /// Handles the view command for parallel showcase.
+        /// </summary>
+        /// <param name="numberOfGames">Number of active games.</param>
+        /// <param name="onViewGame">Action to change the game that is being viewed.</param>
+        private void HandleViewCommand(int numberOfGames, Action<int> onViewGame)
+        {
+            string prompt = string.Format(Constants.ViewGamePromptFormat, numberOfGames);
+            string input = _renderer.Prompt(prompt);
+            if (int.TryParse(input, out int selection) && selection >= 1 && selection <= numberOfGames)
+            {
+                onViewGame(selection - 1);
+                _renderer.RenderMessage(string.Format(Constants.ViewGameChangedMessageFormat, selection));
+            }
+            else
+            {
+                _renderer.RenderMessage(Constants.InvalidViewSelectionMessage);
             }
         }
     }

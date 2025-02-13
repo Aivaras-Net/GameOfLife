@@ -6,16 +6,18 @@
     public static class Constants
     {
         public const int DefaultSleepTime = 1000;
+        public const int ParallelShowcaseFieldSize = 30;
+        public const int ParallelShowcaseGameCount = 1000;
+        public const int AliveCell = 1;
+        public const int DeadCell = 0;
 
         #region File manager constants
-        public const string FieldArgumentName = "field";
         public const string DirectoryPathArgumentName = "directoryPath";
         public const string FilePathArgumentName = "filePath";
 
         public const string NullOrEmptyDirectoryPathMessage = "Directory path cannot be null or empty.";
         public const string NullOrEmptyFilePathMessage = "File path cannot be null or empty.";
         public const string InvalidGameStateDataMessage = "Invalid game state data";
-        public const string FieldAndIterationMismatchMessage = "Mismatch between fields and iterations length";
 
         public const string SingleSaveFilePrefix = "Game";
         public const string SingleFileSearchPattern = SingleSaveFilePrefix + "*.json";
@@ -27,7 +29,8 @@
         public const bool JsonWriteIndented = true;
         #endregion
 
-        public const int Headerheight = 3;
+        public const int Headerheight = 4;
+        public const int MinimumStatsWidth = 25;
         public const string DefaultSaveFolder = "Saves";
 
         public const string ExitingGameMessage = "Exiting game...";
@@ -42,7 +45,6 @@
         public const string SpecificGamePauseStateChangedMessageFormat = "Game {0} pause state changed.";
         public const string InvalidTogglePauseSelectionMessage = "Invalid selection for toggling pause state.";
         public const string GamePauseToggledMessage = "Game pause state toggled.";
-        public const string ParallelShowcaseNotImplementedMessage = "Parallel Showcase is not implemented yet.";
         public const string NoValidFileSelectedMessage = "No valid file selected.";
         public const string GameLoadedSuccessfullyMessage = "Loaded game(s) successfully.";
 
@@ -50,5 +52,10 @@
 
         public const string SavePromptFormat = "Enter 0 to save all games in one file or a game number (1-{0}) to save a specific game:";
         public const string TogglePausePromptFormat = "Enter 0 to toggle pause state for all games or a game number (1-{0}) for a specific game:";
+
+        public const string ViewGamePromptFormat = "Enter a game number (1-{0}) to view:";
+        public const string InvalidViewSelectionMessage = "Invalid selection for viewing.";
+
+        public const string ViewGameChangedMessageFormat = "Now viewing game {0}";
     }
 }

@@ -1,4 +1,4 @@
-﻿using GameOfLife.Core.Infrastucture;
+﻿using GameOfLife.Core.Infrastructure;
 using GameOfLife.Core.Interfaces;
 
 namespace GameOfLife.CLI.Infrastructure
@@ -6,7 +6,7 @@ namespace GameOfLife.CLI.Infrastructure
     /// <summary>
     /// Manages user input for starting the Game of life.
     /// </summary>
-    internal class GameSetupInputHandler : IGameSetupInputHandler 
+    internal class GameSetupInputHandler : IGameSetupInputHandler
     {
         /// <summary>
         /// Prompts the user to select or enter a field size.
@@ -15,30 +15,15 @@ namespace GameOfLife.CLI.Infrastructure
         public int GetFieldSize()
         {
             int[] presetSizes = ConsoleConstants.PresetFieldSizes;
-            string[] options = presetSizes.Select(size => $"{size}x{size}").Concat(new[] { ConsoleConstants.CustomOption }).ToArray();
-            int selectedIndex = 0;
+            string[] options = presetSizes.Select(size => $"{size}x{size}")
+                                        .Concat(new[] { ConsoleConstants.CustomOption })
+                                        .ToArray();
 
-            // Loop until user makes a selection.
-            while (true)
-            {
-                Console.Clear();
-                Console.WriteLine(ConsoleConstants.SelectFieldSizeMessage);
-                for (int i = 0; i < options.Length; i++)
-                {
-                    Console.WriteLine((i == selectedIndex ? ConsoleConstants.ArrowPointer : ConsoleConstants.NoArrowPrefix) + options[i]);
-                }
-
-                ConsoleKeyInfo keyInfo = Console.ReadKey(true);
-                if (keyInfo.Key == ConsoleKey.UpArrow)
-                    selectedIndex = (selectedIndex - 1 + options.Length) % options.Length;
-                else if (keyInfo.Key == ConsoleKey.DownArrow)
-                    selectedIndex = (selectedIndex + 1) % options.Length;
-                else if (keyInfo.Key == ConsoleKey.Enter)
-                    break;
-            }
+            int selectedIndex = ConsoleSelectionUtility.GetSelectionFromOptions(
+                ConsoleConstants.SelectFieldSizeMessage,
+                options);
 
             return selectedIndex == options.Length - 1 ? GetCustomSize() : presetSizes[selectedIndex];
-
         }
 
         /// <summary>
@@ -51,13 +36,15 @@ namespace GameOfLife.CLI.Infrastructure
             while (true)
             {
                 Console.Clear();
-                Console.WriteLine(ConsoleConstants.CustomFieldSizePromt);
+                Console.WriteLine(ConsoleConstants.CustomFieldSizePrompt);
                 if (int.TryParse(Console.ReadLine(), out customSize) && customSize > 0)
                 {
                     Console.Clear();
                     return customSize;
                 }
 
+                Console.WriteLine(ConsoleConstants.InvalidFieldSizeMessage);
+                Thread.Sleep(ConsoleConstants.MessageSleepTime);
             }
         }
 
@@ -67,24 +54,23 @@ namespace GameOfLife.CLI.Infrastructure
         /// <returns>The selected mode.</returns>
         public GameStartMode GetGameStartMode()
         {
-            Console.Clear();
-            Console.WriteLine(ConsoleConstants.GameStartModePromptMessage);
-            Console.WriteLine(ConsoleConstants.LoadGameOptionMessage);
-            Console.WriteLine(ConsoleConstants.NewGameOptionMessage);
-            Console.WriteLine(ConsoleConstants.ParallelShowcaseOptionMessage);
+            string[] options = {
+                ConsoleConstants.LoadGameOptionMessage,
+                ConsoleConstants.NewGameOptionMessage,
+                ConsoleConstants.ParallelShowcaseOptionMessage
+            };
 
-            ConsoleKeyInfo keyInfo = Console.ReadKey(true);
-            switch (keyInfo.Key)
+            int selectedIndex = ConsoleSelectionUtility.GetSelectionFromOptions(
+                ConsoleConstants.GameStartModePromptMessage,
+                options);
+
+            return selectedIndex switch
             {
-                case ConsoleKey.L:
-                    return GameStartMode.Load;
-                case ConsoleKey.N:
-                    return GameStartMode.New;
-                case ConsoleKey.P:
-                    return GameStartMode.ParralelShowcase;
-                default:
-                    return GameStartMode.New;
-            }
+                0 => GameStartMode.Load,
+                1 => GameStartMode.New,
+                2 => GameStartMode.ParralelShowcase,
+                _ => GameStartMode.New
+            };
         }
 
         /// <summary>
@@ -94,13 +80,21 @@ namespace GameOfLife.CLI.Infrastructure
         public int GetNumberOfGames()
         {
             int numberOfGames;
-            do
+            while (true)
             {
                 Console.Clear();
                 Console.WriteLine(ConsoleConstants.ConcurentGameNumberPrompt);
+
+                if (int.TryParse(Console.ReadLine(), out numberOfGames) &&
+                    numberOfGames >= ConsoleConstants.MIN_GAMES &&
+                    numberOfGames <= ConsoleConstants.MAX_GAMES)
+                {
+                    return numberOfGames;
+                }
+
+                Console.WriteLine(ConsoleConstants.InvalidNumberOfGamesMessage);
+                Thread.Sleep(ConsoleConstants.MessageSleepTime);
             }
-            while (!int.TryParse(Console.ReadLine(), out numberOfGames));
-            return numberOfGames;
         }
     }
 }

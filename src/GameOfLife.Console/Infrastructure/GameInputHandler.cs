@@ -1,4 +1,4 @@
-﻿using GameOfLife.Core.Infrastucture;
+﻿using GameOfLife.Core.Infrastructure;
 using GameOfLife.Core.Interfaces;
 
 namespace GameOfLife.CLI.Infrastructure
@@ -26,6 +26,8 @@ namespace GameOfLife.CLI.Infrastructure
                     return GameCommand.Stop;
                 case ConsoleKey.Q:
                     return GameCommand.Quit;
+                case ConsoleKey.V:
+                    return GameCommand.View;
                 default:
                     return GameCommand.None;
             }

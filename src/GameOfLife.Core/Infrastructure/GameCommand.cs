@@ -1,4 +1,4 @@
-﻿namespace GameOfLife.Core.Infrastucture
+﻿namespace GameOfLife.Core.Infrastructure
 {
     /// <summary>
     /// Represents the command that can be executed during the game.
@@ -8,6 +8,7 @@
         None,
         Save,
         Stop,
-        Quit
+        Quit,
+        View
     }
 }

@@ -10,16 +10,7 @@
         /// <param name="livingCells">The number of living cells.</param>
         /// <param name="offsetX">The left offset for rendering.</param>
         /// <param name="offsetY">The top offset for rendering.</param>
-        void Render(bool[,] field,int gameID, int iteration, int livingCells, bool paused, int offsetX, int offsetY);
-
-        /// <summary>
-        /// Renders game statistics above the game field.
-        /// </summary>
-        /// <param name="iteration">The current iteration count.</param>
-        /// <param name="livingCells">The number of living cells.</param>
-        /// <param name="offsetX">The left offset for rendering the statistics.</param>
-        /// <param name="offsetY">The top offset for rendering the statistics.</param>
-        //void RenderStatistics(int iteration, int livingCells, int offsetX, int offsetY);
+        void Render(bool[,] field, int gameId, int iteration, int livingCells, bool paused = false, int offsetX = 0, int offsetY = 0);
 
         /// <summary>
         /// Renders a temporary message.
@@ -30,7 +21,7 @@
         /// <summary>
         /// Initiates an empty off-screen buffer.
         /// </summary>
-        public void BeginFrame();
+        void BeginFrame(bool isParallelShowcase = false);
 
         /// <summary>
         /// Flushes the off–screen buffer to the console.
@@ -44,6 +35,11 @@
         /// <returns>The user's input as a string.</returns>
         public string Prompt(string message);
 
-
+        /// <summary>
+        /// Renders the global statistics for all games.
+        /// </summary>
+        /// <param name="activeGames">Number of active games</param>
+        /// <param name="totalLivingCells">Number of total living cells</param>
+        void RenderGlobalStats(int activeGames, int totalLivingCells);
     }
 }
