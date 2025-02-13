@@ -34,7 +34,7 @@
         public const string LoadGameOptionMessage = "L: Load game";
         public const string NewGameOptionMessage = "N: New game";
         public const string ParallelShowcaseOptionMessage = "P: Parallel Showcase";
-        public const string NoSaveGamesExistMessage = "No save games exist.";
+        public const string NoSaveGamesExistMessage = " No save games exist.";
         public const string SelectSavedGameMessage = "Select a saved game to load:";
         public const string EnterSaveFileNumberMessage = "Enter the number of the save file:";
         public const string InvalidSaveSelectionMessage = "Invalid selection. Try again.";

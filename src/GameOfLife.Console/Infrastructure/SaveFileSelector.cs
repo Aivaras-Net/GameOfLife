@@ -19,6 +19,7 @@ namespace GameOfLife.CLI.Infrastructure
         {
             if (!Directory.Exists(saveFolder))
             {
+                Console.Clear();
                 Console.WriteLine(ConsoleConstants.NoSaveGamesExistMessage);
                 return null;
             }
